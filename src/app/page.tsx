@@ -1,113 +1,186 @@
-import Image from "next/image";
+"use client";
+import Footer from "@/components/footer";
+import Card from "@/components/card";
+import Navbar from "@/components/navbar";
+import Table from "@/components/table";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <div>
+        <Navbar />
+        <div className={"min-h-screen"}>
+            <div className="relative rounded-2xl bg-cover bg-center h-96 text-white flex flex-col justify-center items-center" style={{backgroundImage: "url('https://cdn.pixabay.com/photo/2017/08/07/06/18/people-2600578_1280.jpg')"}}>
+                <h1 className="text-2xl md:text-4xl font-bold mb-4 px-4">모든 기업 정보를 한 번에 무료로 확인하세요.</h1>
+                <div className="flex items-center w-3/4 md:w-1/2">
+                    <div className="absolute ml-3 ">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <input type="text" placeholder="기업명 검색..." className="input input-bordered pl-10 p-2 w-full rounded-lg text-gray-700" />
+                </div>
+            </div>
+            <section className={"py-8 px-4"}>
+                <div className={"container mx-auto"}>
+                    <h1 className={"text-3xl font-bold mb-4"}>오늘의 기업</h1>
+                    <div className={"grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"}>
+                        <Card />
+                        <Card />
+                        <Card />
+                        <Card />
+                    </div>
+                </div>
+            </section>
+            <section className={"py-8 px-4"}>
+                <div>
+                    <h2 className="text-3xl font-bold mb-4">오늘의 인사이트</h2>
+                    <div className="w-full h-48 stats shadow">
+                        <div className="stat place-items-center">
+                            <BuildingIcon className="w-12 h-12 text-black" />
+                            <div className="stat-title">확인된 기업</div>
+                            <div className="stat-value">500,000개</div>
+                            <div className="stat-desc ">↗︎ 40 (2%)</div>
+                            <div className="stat-desc ">2023.12월 기준</div>
+                        </div>
+                        <div className="stat place-items-center">
+                            <UsersIcon className="w-12 h-12 text-black" />
+                            <div className="stat-title">전체 근로자</div>
+                            <div className="stat-value">18,000,000명</div>
+                            <div className="stat-desc">↗︎ 40 (2%)</div>
+                            <div className="stat-desc ">2023.12월 기준</div>
+                        </div>
+                        <div className="stat place-items-center">
+                            <div className="stat-title">취업자수</div>
+                            <div className="stat-value">80,000명</div>
+                            <div className="stat-desc">↘︎ 90 (14%)</div>
+                            <div className="stat-desc ">2023.12월 기준</div>
+                        </div>
+                        <div className="stat place-items-center">
+                            <div className="stat-title">실업자수</div>
+                            <div className="stat-value">60,000명</div>
+                            <div className="stat-desc">↘︎ 90 (14%)</div>
+                            <div className="stat-desc ">2023.12월 기준</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section className="py-8 px-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <h2 className="text-2xl font-bold mb-4">이번달 평균연봉</h2>
+                        <div className="w-full h-48 stats shadow">
+                            <div className="stat place-items-center">
+                                <TrendingUpIcon className="w-12 h-12 text-black" />
+                                <div className="stat-title">평균연봉</div>
+                                <div className="stat-value">5000만원</div>
+                                <div className="stat-desc ">↗︎ 40 (2%)</div>
+                                <div className="stat-desc ">2023.12월 기준</div>
+                            </div>
+                            <div className="stat place-items-center">
+                                <div className="stat-title">중위연봉</div>
+                                <div className="stat-value">5000만원</div>
+                                <div className="stat-desc ">↗︎ 40 (2%)</div>
+                                <div className="stat-desc ">2023.12월 기준</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h2 className="text-2xl font-bold mb-4">2023년 평균연봉</h2>
+                        <div className="w-full h-48 stats shadow">
+                            <div className="stat place-items-center">
+                                <TrendingUpIcon className="w-12 h-12 text-black" />
+                                <div className="stat-title">평균연봉</div>
+                                <div className="stat-value">5000만원</div>
+                                <div className="stat-desc ">↗︎ 40 (2%)</div>
+                                <div className="stat-desc ">2023년 기준</div>
+                            </div>
+                            <div className="stat place-items-center">
+                                <div className="stat-title">중위연봉</div>
+                                <div className="stat-value">5000만원</div>
+                                <div className="stat-desc ">↗︎ 40 (2%)</div>
+                                <div className="stat-desc ">2023년 기준</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section className="py-8 px-4">
+                <Table />
+            </section>
         </div>
-      </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-full sm:before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full sm:after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50 text-balance`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    </div>
   );
+}
+
+function BuildingIcon(props) {
+    return (
+        <svg
+            {...props}
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <rect width="16" height="20" x="4" y="2" rx="2" ry="2" />
+            <path d="M9 22v-4h6v4" />
+            <path d="M8 6h.01" />
+            <path d="M16 6h.01" />
+            <path d="M12 6h.01" />
+            <path d="M12 10h.01" />
+            <path d="M12 14h.01" />
+            <path d="M16 10h.01" />
+            <path d="M16 14h.01" />
+            <path d="M8 10h.01" />
+            <path d="M8 14h.01" />
+        </svg>
+    )
+}
+
+
+function TrendingUpIcon(props) {
+    return (
+        <svg
+            {...props}
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
+            <polyline points="16 7 22 7 22 13" />
+        </svg>
+    )
+}
+
+
+function UsersIcon(props) {
+    return (
+        <svg
+            {...props}
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+    )
 }
