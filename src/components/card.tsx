@@ -15,8 +15,8 @@ export default function Card() {
                 <div className="text-gray-500 text-sm">서울특별시</div>
                 <p>핸드폰 갤럭시 24 제조업</p>
                 <div className="card-actions justify-end">
-                    <div className="badge badge-outline">연봉 8000</div>
-                    <div className="badge badge-outline">상위 2%</div>
+                    <span className="badge badge-ghost badge-md">연봉 8000만원</span>
+                    <span className="badge badge-ghost badge-md">상위 2%</span>
                 </div>
             </div>
         </div>

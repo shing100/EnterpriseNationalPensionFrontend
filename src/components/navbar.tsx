@@ -1,10 +1,11 @@
+import Link from "next/link";
 
 
 export default function Navbar() {
     return (
         <div className="navbar bg-base-100">
             <div className="flex-1">
-                <a className="btn btn-ghost text-xl">인사이트잡</a>
+                <Link href={"/"} className={"btn btn-ghost text-xl"}>인사이트잡</Link>
             </div>
             <div className="flex-none">
                 <ul className="menu menu-horizontal px-1">
@@ -15,9 +16,9 @@ export default function Navbar() {
                             <summary>
                                 연봉정보
                             </summary>
-                            <ul className="p-2 bg-base-100 rounded-t-none">
-                                <li><a>지역별</a></li>
-                                <li><a>산업별</a></li>
+                            <ul className="p-2 bg-base-100 rounded-t-none z-10">
+                                <li><Link href={"/salary/location"}>지역별</Link></li>
+                                <li><Link href={"/salary/industry"}>산업별</Link></li>
                             </ul>
                         </details>
                     </li>

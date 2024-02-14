@@ -2,6 +2,7 @@ import '../styles/globals.css'
 import type {Metadata} from "next";
 import {SWRProvider} from "@/app/SWRProvider";
 import Footer from "@/components/footer";
+import Navbar from "@/components/navbar";
 
 //const inter = Inter({ subsets: ["latin"] });
 
@@ -14,15 +15,18 @@ export const metadata: Metadata = {
 export default function RootLayout({children,}: { children: React.ReactNode }) {
   return (
       <html lang="ko" data-theme={"light"}>
-      <body >
-      <div className="w-full max-w-screen-2xl  mx-auto">
-        <SWRProvider>
-          {children}
-        </SWRProvider>
-      </div>
-      </body>
-      <hr />
-      <Footer />
+          <body >
+              <div className="w-full max-w-screen-2xl mx-auto">
+                <Navbar />
+              </div>
+              <hr className="mb-4"/>
+              <div className="w-full max-w-screen-2xl mx-auto">
+                <SWRProvider>
+                  {children}
+                </SWRProvider>
+              </div>
+              <Footer />
+          </body>
       </html>
   )
 }
