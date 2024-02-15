@@ -2,7 +2,7 @@
 
 export default function Card() {
     return (
-        <div className="card w-50 bg-base-100 shadow-xl">
+        <div className="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow duration-300">
             <div className="card-body">
                 <h2 className="card-title">
                     <div className="avatar">

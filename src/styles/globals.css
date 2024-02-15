@@ -8,3 +8,8 @@
 body {
   font-family: 'Noto Sans KR', sans-serif;
 }
+
+#disqus_thread {
+  color: white;
+  color-scheme: none;
+}
