@@ -9,7 +9,6 @@ body {
   font-family: 'Noto Sans KR', sans-serif;
 }
 
-#disqus_thread {
-  color: white;
-  color-scheme: none;
+#reactions__container {
+  display: none !important;
 }

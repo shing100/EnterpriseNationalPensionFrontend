@@ -15,8 +15,8 @@ export default function Navbar() {
                                 기업/채용
                             </summary>
                             <ul className="p-2 bg-base-100 rounded-t-none z-10">
-                                <li><Link href="/company">기업정보</Link></li>
                                 <li><Link href="/recruit">채용정보</Link></li>
+                                <li><Link href="/company">기업정보</Link></li>
                             </ul>
                         </details>
                     </li>

@@ -11,9 +11,12 @@
   "dependencies": {
     "@heroicons/react": "^1.0.6",
     "@tailwindcss/forms": "^0.5.7",
+    "chart.js": "^4.4.1",
+    "daisyui": "^3.9.4",
     "disqus-react": "^1.1.5",
     "next": "14.1.0",
     "react": "^18",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18",
     "react-hook-form": "^7.50.1",
     "swr": "^2.2.4"
@@ -23,7 +26,6 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
-    "daisyui": "^4.7.0",
     "eslint": "^8",
     "eslint-config-next": "14.1.0",
     "postcss": "^8",
