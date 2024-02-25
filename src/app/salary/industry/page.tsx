@@ -113,7 +113,7 @@ export default function IndustrySalaryStat() {
                     <IndustryCard key={industry.companyIndustryName} industry={industry} />
                 ))}
             </div>
-            <hr className={"my-8"}></hr>
+            <hr className={"my-12"}></hr>
             <DiscussionEmbed
                 key="IndustrySalaryStat"
                 shortname='insight-jov'

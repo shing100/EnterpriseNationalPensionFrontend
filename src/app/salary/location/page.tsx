@@ -21,19 +21,6 @@ export default function LocationSalaryStat() {
                     <LocationCard key={location.name} location={location} />
                 ))}
             </div>
-            <hr className={"my-8"}></hr>
-            <DiscussionEmbed
-                key="LocationSalaryStat"
-                shortname='insight-jov'
-                config={
-                    {
-                        url: "http://localhost:3000/salary/location",
-                        identifier: "location",
-                        title: "지역별 연봉정보입니다.",
-                        language: 'ko',
-                    }
-                }
-            />
         </div>
     );
 }
