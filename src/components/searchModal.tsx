@@ -53,24 +53,24 @@ export default function SearchPage({onClose}: SearchPageProps) {
                     </div>
                 </div>
 
-                {/* 기업 정보 */}
                 <div className="mb-8 overflow-x-auto">
-                    <h3 className="text-lg font-semibold mb-2">기업 정보</h3>
-                    <div className="flex space-x-4">
-                        {/* 기업 정보 카드 */}
-                        <div className="card w-80 bg-gray-100 shadow-xl">
-                            <figure><img src="company-logo-url.jpg" alt="Company" /></figure>
-                            <div className="card-body">
-                                <h2 className="card-title">기업명</h2>
-                                <p>기업에 대한 간단한 설명입니다.</p>
-                                <div className="card-actions justify-end">
-                                    <button className="btn btn-xs">더 보기</button>
+                    <h3 className="text-lg font-semibold mb-2">랜덤 기업</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-2 gap-4">
+                        {/* 여러 기업 정보 카드 반복 */}
+                        {Array.from({ length: 5 }).map((_, index) => (
+                            <div key={index} className="flex w-full bg-gray-100 rounded-md">
+                                <figure className="flex-none w-16 h-16 bg-white m-4 rounded-xl">
+                                    <img className="w-12 h-12 m-auto my-2" src="/default_company.png" alt="Company" />
+                                </figure>
+                                <div className="my-auto">
+                                    <h2 className="text-md font-bold">기업명 #{index + 1}</h2>
+                                    <p>기업에 대한 간단한 설명입니다.</p>
                                 </div>
                             </div>
-                        </div>
-                        {/* ... 기타 기업 정보 카드 ... */}
+                        ))}
                     </div>
                 </div>
+
             </div>
         </div>
     );
