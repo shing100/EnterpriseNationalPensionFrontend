@@ -12,13 +12,13 @@ export default function SearchPage({onClose}: SearchPageProps) {
         <div className="min-h-screen flex flex-col items-center p-10">
             <div className="max-w-screen-md w-full">
                 {/* 닫기 버튼 */}
-                <button onClick={onClose} className="absolute top-0 right-0 m-8">
+                <button onClick={onClose} className="absolute top-0 right-0 m-4">
                     <svg className="h-6 w-6 text-gray-700" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
                         <path d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
                 </button>
                 {/* 검색 바 */}
-                <div className="flex items-center justify-center mb-8 mt-12">
+                <div className="flex items-center justify-center mb-8 mt-4">
                     <div className="form-control w-full">
                         <div className="input-group">
                             <span className="input-group-text w-12">
@@ -32,8 +32,8 @@ export default function SearchPage({onClose}: SearchPageProps) {
                 </div>
 
                 {/* 최근 검색어 */}
-                <div className="mb-20">
-                    <h3 className="text-lg font-semibold mb-4">최근 검색어</h3>
+                <div className="mb-12">
+                    <h3 className="text-lg font-semibold mb-2">최근 검색어</h3>
                     <div className="flex flex-wrap gap-2">
                         <span className="badge badge-xs bg-gray-200 text-lg p-4">지마켓</span>
                         <span className="badge badge-xs bg-gray-200 text-lg p-4">네이처코스텍</span>
@@ -43,8 +43,8 @@ export default function SearchPage({onClose}: SearchPageProps) {
                 </div>
 
                 {/* 실시간 인기 검색어 */}
-                <div className="mb-20">
-                    <h3 className="text-lg font-semibold mb-4">실시간 인기 검색어</h3>
+                <div className="mb-12">
+                    <h3 className="text-lg font-semibold mb-2">실시간 인기 검색어</h3>
                     <div className="flex flex-wrap gap-2">
                         <span className="badge badge-xs bg-gray-200 text-lg p-4">삼성전자</span>
                         <span className="badge badge-xs bg-gray-200 text-lg p-4">SK하이닉스</span>
