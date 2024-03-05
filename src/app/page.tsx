@@ -1,14 +1,16 @@
 "use client";
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import Card from "@/components/card";
 import Table from "@/components/table";
 import SearchPage from "@/components/searchModal";
+import { useInsightRecomCompany } from "@/libs/server/client";
 
 interface IconProps {
     className?: string;
 }
 
 export default function Home() {
+    const { companies, isLoading, isError } = useInsightRecomCompany('202401', 'desc', 4, 100);
     const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
     const handleSearchClick = () => {
@@ -42,10 +44,9 @@ export default function Home() {
                     <div className={"container mx-auto"}>
                         <h1 className={"text-3xl font-bold mb-4"}>오늘의 기업</h1>
                         <div className="grid gap-x-10 gap-y-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-                            <Card/>
-                            <Card/>
-                            <Card/>
-                            <Card/>
+                            {companies && companies.map((company: any) => (
+                                <Card key={company.id} {...company} />
+                            ))}
                         </div>
                     </div>
                 </section>
