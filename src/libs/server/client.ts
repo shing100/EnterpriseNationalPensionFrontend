@@ -1,4 +1,5 @@
 import useSWR from 'swr';
+import {AverageSalary, MonthlyStatData} from "@/types";
 
 interface ApiResponse {
     ok: boolean;
@@ -41,4 +42,36 @@ export function useInsightRecomCompany(date: string, sort: string, size: number,
         isLoading: !error && !data,
         isError: error,
     };
+}
+
+export function useInsightTopContributions(size: number) {
+    const params = new URLSearchParams({
+        size: size.toString(),
+    });
+
+    const { data, error } = useSWR<ApiResponse>(`${API_BASE_URL}/insight/company/contributions?${params.toString()}`, fetchWithSWR);
+
+    return {
+        contributions: data?.resultList,
+        isLoading: !error && !data,
+        isError: error,
+    };
+}
+
+export function useAverageSalary() {
+    const { data, error } = useSWR<AverageSalary>(`${API_BASE_URL}/insight/average`, fetchWithSWR);
+    return {
+        averageSalary: data,
+        isLoading: !error && !data,
+        isError: error
+    }
+}
+
+export function useMonthlyStat() {
+    const { data, error } = useSWR<MonthlyStatData>(`${API_BASE_URL}/insight/monthly`, fetchWithSWR);
+    return {
+        monthlyStat: data,
+        isLoading: !error && !data,
+        isError: error
+    }
 }

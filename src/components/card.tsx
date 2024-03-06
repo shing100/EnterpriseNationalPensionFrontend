@@ -2,8 +2,6 @@ import { CompanyData } from '@/types';
 import formatSalaryToMillionWon from "@/libs/utils";
 
 export default function Card(data: CompanyData) {
-    console.log(data);
-
     return (
         <div className="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow duration-300">
             <div className="card-body">

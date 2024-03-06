@@ -3,7 +3,13 @@ import React, {useState, useEffect} from "react";
 import Card from "@/components/card";
 import Table from "@/components/table";
 import SearchPage from "@/components/searchModal";
-import { useInsightRecomCompany } from "@/libs/server/client";
+import {
+    useMonthlyStat,
+    useAverageSalary,
+    useInsightRecomCompany,
+    useInsightTopContributions
+} from "@/libs/server/client";
+import formatSalaryToMillionWon, {formatNumberWithCommas} from "@/libs/utils";
 
 interface IconProps {
     className?: string;
@@ -11,6 +17,9 @@ interface IconProps {
 
 export default function Home() {
     const { companies, isLoading, isError } = useInsightRecomCompany('202401', 'desc', 4, 100);
+    const { contributions, isLoading : cLoading, isError : cIsError } = useInsightTopContributions(10);
+    const { averageSalary, isLoading: aLoading, isError: aIsError } = useAverageSalary();
+    const { monthlyStat, isLoading: mLoading, isError: mIsError } = useMonthlyStat();
     const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
     const handleSearchClick = () => {
@@ -51,80 +60,166 @@ export default function Home() {
                     </div>
                 </section>
                 <section className={"py-8 px-4"}>
+                    {monthlyStat != null ? (
                     <div>
                         <h2 className="text-3xl font-bold mb-4">오늘의 인사이트</h2>
                         <div className="w-full h-52 stats shadow hover:shadow-xl transition-shadow duration-300">
                             <div className="stat place-items-center">
                                 <BuildingIcon className="w-12 h-12 text-black"/>
                                 <div className="stat-title">확인된 기업</div>
-                                <div className="stat-value">500,000개</div>
-                                <div className="stat-desc ">↗︎ 40 (2%)</div>
-                                <div className="stat-desc ">2023.12월 기준</div>
+                                <div className="stat-value">{formatNumberWithCommas(monthlyStat.totalCompanyCount)}개</div>
+                                {monthlyStat.totalCompanyRate > 0 ? (
+                                    <><div className="stat-desc text-sm text-red-700">
+                                        ↗︎ {Math.abs(monthlyStat.totalCompanyRate)}% ({formatNumberWithCommas(monthlyStat.totalCompanyCount - monthlyStat.beforeTotalCompanyCount)}개)
+                                    </div></>
+                                ) : monthlyStat.totalCompanyRate < 0 ? (
+                                    <><div className="stat-desc text-sm text-blue-700">
+                                        ↘︎ {Math.abs(monthlyStat.totalCompanyRate)}% ({formatNumberWithCommas(monthlyStat.beforeTotalCompanyCount - monthlyStat.totalCompanyCount)}개)
+                                    </div></>
+                                ) : (
+                                    <><div className="stat-desc text-sm">— 0%</div></>
+                                )}
+                                <div className="stat-desc ">{monthlyStat.year}.{monthlyStat.month}월 기준</div>
                             </div>
                             <div className="stat place-items-center">
                                 <UsersIcon className="w-12 h-12 text-black"/>
                                 <div className="stat-title">전체 근로자</div>
-                                <div className="stat-value">18,000,000명</div>
-                                <div className="stat-desc">↗︎ 40 (2%)</div>
-                                <div className="stat-desc ">2023.12월 기준</div>
+                                <div className="stat-value">{formatNumberWithCommas(monthlyStat.totalEmployed)}명</div>
+                                {monthlyStat.totalEmployedRate > 0 ? (
+                                    <><div className="stat-desc text-sm text-red-700">
+                                        ↗︎ {Math.abs(monthlyStat.totalEmployedRate)}% ({formatNumberWithCommas(monthlyStat.totalEmployed - monthlyStat.beforeTotalEmployed)}명)
+                                    </div></>
+                                ) : monthlyStat.totalEmployedRate < 0 ? (
+                                    <><div className="stat-desc text-sm text-blue-700">
+                                        ↘︎ {Math.abs(monthlyStat.totalEmployedRate)}% ({formatNumberWithCommas(monthlyStat.beforeTotalEmployed - monthlyStat.totalEmployed)}명)
+                                    </div></>
+                                ) : (
+                                    <><div className="stat-desc text-sm">— 0%</div></>
+                                )}
+                                <div className="stat-desc ">{monthlyStat.year}.{monthlyStat.month}월 기준</div>
                             </div>
                             <div className="stat place-items-center">
                                 <TrendingUpIcon className="w-12 h-12 text-black"/>
                                 <div className="stat-title">취업자수</div>
-                                <div className="stat-value">80,000명</div>
-                                <div className="stat-desc">↘︎ 90 (14%)</div>
-                                <div className="stat-desc ">2023.12월 기준</div>
+                                <div className="stat-value">{formatNumberWithCommas(monthlyStat.totalEmployedMemberCount)}명</div>
+                                {monthlyStat.totalEmployedMemberRate > 0 ? (
+                                    <><div className="stat-desc text-sm text-red-700">
+                                        ↗︎ {Math.abs(monthlyStat.totalEmployedMemberRate)}% ({formatNumberWithCommas(monthlyStat.totalEmployedMemberCount - monthlyStat.beforeTotalEmployedMemberCount)}명)
+                                    </div></>
+                                ) : monthlyStat.totalEmployedMemberRate < 0 ? (
+                                    <><div className="stat-desc text-sm text-blue-700">
+                                        ↘︎ {Math.abs(monthlyStat.totalEmployedMemberRate)}% ({formatNumberWithCommas(monthlyStat.beforeTotalEmployedMemberCount - monthlyStat.totalEmployedMemberCount)}명)
+                                    </div></>
+                                ) : (
+                                    <><div className="stat-desc text-sm">— 0%</div></>
+                                )}
+                                <div className="stat-desc ">{monthlyStat.year}.{monthlyStat.month}월 기준</div>
                             </div>
                             <div className="stat place-items-center">
-                                <TrendingUpIcon className="w-12 h-12 text-black"/>
+                                <TrendingDownIcon className="w-12 h-12 text-black"/>
                                 <div className="stat-title">실업자수</div>
-                                <div className="stat-value">60,000명</div>
-                                <div className="stat-desc">↘︎ 90 (14%)</div>
-                                <div className="stat-desc ">2023.12월 기준</div>
+                                <div className="stat-value">{formatNumberWithCommas(monthlyStat.totalLostMemberCount)}명</div>
+                                {monthlyStat.totalLostMemberRate > 0 ? (
+                                    <><div className="stat-desc text-sm text-red-700">
+                                        ↗︎ {Math.abs(monthlyStat.totalLostMemberRate)}% ({formatNumberWithCommas(monthlyStat.totalLostMemberCount - monthlyStat.beforeTotalLostMemberCount)}명)
+                                    </div></>
+                                ) : monthlyStat.totalEmployedMemberRate < 0 ? (
+                                    <><div className="stat-desc text-sm text-blue-700">
+                                        ↘︎ {Math.abs(monthlyStat.totalLostMemberRate)}% ({formatNumberWithCommas(monthlyStat.beforeTotalLostMemberCount - monthlyStat.totalLostMemberCount)}명)
+                                    </div></>
+                                ) : (
+                                    <><div className="stat-desc text-sm">— 0% ({formatNumberWithCommas(monthlyStat.totalLostMemberCount - monthlyStat.beforeTotalLostMemberCount)}명)</div></>
+                                )}
+                                <div className="stat-desc ">{monthlyStat.year}.{monthlyStat.month}월 기준</div>
                             </div>
                         </div>
                     </div>
+                    ) : null}
                 </section>
                 <section className="py-8 px-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 gap-y-6">
-                        <div>
-                            <h2 className="text-2xl font-bold mb-4">이번달 평균연봉</h2>
-                            <div className="w-full h-40 stats shadow hover:shadow-xl transition-shadow duration-300">
-                                <div className="stat place-items-center">
-                                    <div className="stat-title">평균연봉</div>
-                                    <div className="stat-value">5000만원</div>
-                                    <div className="stat-desc ">↗︎ 40 (2%)</div>
-                                    <div className="stat-desc ">2023.12월 기준</div>
+                        {averageSalary != null ? (
+                            <>
+                                <div>
+                                    <h2 className="text-2xl font-bold mb-4">이번달 평균연봉</h2>
+                                    <div className="w-full h-40 stats shadow hover:shadow-xl transition-shadow duration-300">
+                                        <div className="stat place-items-center">
+                                            <div className="stat-title">평균연봉</div>
+                                            <div className="stat-value">{formatSalaryToMillionWon(averageSalary.averageSalary)}</div>
+                                            {averageSalary.averageSalaryGrowthRate > 0 ? (
+                                                <><div className="stat-desc text-sm text-red-700">
+                                                    ↗︎ {Math.abs(averageSalary.averageSalaryGrowthRate)}% ({formatNumberWithCommas(averageSalary.averageSalary - averageSalary.beforeAverageSalary)}원)
+                                                </div></>
+                                            ) : averageSalary.averageSalaryGrowthRate < 0 ? (
+                                                <><div className="stat-desc text-sm text-blue-700">
+                                                    ↘︎ {Math.abs(averageSalary.averageSalaryGrowthRate)}% ({formatNumberWithCommas(averageSalary.beforeAverageSalary - averageSalary.averageSalary)}원)
+                                                </div></>
+                                            ) : (
+                                                <><div className="stat-desc text-sm">— 0%</div></>
+                                            )}
+                                            <div className="stat-desc ">{averageSalary.year}.{averageSalary.month}월 기준</div>
+                                        </div>
+                                        <div className="stat place-items-center">
+                                            <div className="stat-title">중위연봉</div>
+                                            <div className="stat-value">{formatSalaryToMillionWon(averageSalary.medianSalary)}</div>
+                                            {averageSalary.medianSalaryGrowthRate > 0 ? (
+                                                <><div className="stat-desc text-sm text-red-700">
+                                                    ↗︎ {Math.abs(averageSalary.medianSalaryGrowthRate)}% ({formatNumberWithCommas(averageSalary.medianSalary - averageSalary.beforeMedianSalary)}원)
+                                                </div></>
+                                            ) : averageSalary.medianSalaryGrowthRate < 0 ? (
+                                                <><div className="stat-desc text-sm text-blue-700">
+                                                    ↘︎ {Math.abs(averageSalary.medianSalaryGrowthRate)}% ({formatNumberWithCommas(averageSalary.beforeMedianSalary - averageSalary.medianSalary)}원)
+                                                </div></>
+                                            ) : (
+                                                <><div className="stat-desc text-sm">— 0%</div></>
+                                            )}
+                                            <div className="stat-desc ">{averageSalary.year}.{averageSalary.month}월 기준</div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="stat place-items-center">
-                                    <div className="stat-title">중위연봉</div>
-                                    <div className="stat-value">5000만원</div>
-                                    <div className="stat-desc ">↗︎ 40 (2%)</div>
-                                    <div className="stat-desc ">2023.12월 기준</div>
+                                <div>
+                                    <h2 className="text-2xl font-bold mb-4">이번달 상/하위 연봉</h2>
+                                    <div className="w-full h-40 stats shadow hover:shadow-xl transition-shadow duration-300">
+                                        <div className="stat place-items-center">
+                                            <div className="stat-title">상위 25%</div>
+                                            <div className="stat-value">{formatSalaryToMillionWon(averageSalary.upperQuartileSalary)}</div>
+                                            {averageSalary.upperQuartileSalaryGrowthRate > 0 ? (
+                                                <><div className="stat-desc text-sm text-red-700">
+                                                    ↗︎ {Math.abs(averageSalary.upperQuartileSalaryGrowthRate)}% ({formatNumberWithCommas(averageSalary.upperQuartileSalary - averageSalary.beforeUpperQuartileSalary)}원)
+                                                </div></>
+                                            ) : averageSalary.upperQuartileSalaryGrowthRate < 0 ? (
+                                                <><div className="stat-desc text-sm text-blue-700">
+                                                    ↘︎ {Math.abs(averageSalary.upperQuartileSalaryGrowthRate)}% ({formatNumberWithCommas(averageSalary.beforeUpperQuartileSalary - averageSalary.upperQuartileSalary)}원)
+                                                </div></>
+                                            ) : (
+                                                <><div className="stat-desc text-sm">— 0%</div></>
+                                            )}
+                                            <div className="stat-desc ">{averageSalary.year}.{averageSalary.month}월 기준</div>
+                                        </div>
+                                        <div className="stat place-items-center">
+                                            <div className="stat-title">하위 25%</div>
+                                            <div className="stat-value">{formatSalaryToMillionWon(averageSalary.lowerQuartileSalary)}</div>
+                                            {averageSalary.lowerQuartileSalaryGrowthRate > 0 ? (
+                                                <><div className="stat-desc text-sm text-red-700">
+                                                    ↗︎ {Math.abs(averageSalary.lowerQuartileSalaryGrowthRate)}% ({formatNumberWithCommas(averageSalary.lowerQuartileSalary - averageSalary.beforeLowerQuartileSalary)}원)
+                                                </div></>
+                                            ) : averageSalary.lowerQuartileSalaryGrowthRate < 0 ? (
+                                                <><div className="stat-desc text-sm text-blue-700">
+                                                    ↘︎ {Math.abs(averageSalary.lowerQuartileSalaryGrowthRate)}% ({formatNumberWithCommas(averageSalary.beforeLowerQuartileSalary - averageSalary.lowerQuartileSalary)}원)
+                                                </div></>
+                                            ) : (
+                                                <><div className="stat-desc text-sm">— 0%</div></>
+                                            )}
+                                            <div className="stat-desc ">{averageSalary.year}.{averageSalary.month}월 기준</div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div>
-                            <h2 className="text-2xl font-bold mb-4">2023년 평균연봉</h2>
-                            <div className="w-full h-40 stats shadow hover:shadow-xl transition-shadow duration-300">
-                                <div className="stat place-items-center">
-                                    <div className="stat-title">평균연봉</div>
-                                    <div className="stat-value">5000만원</div>
-                                    <div className="stat-desc ">↗︎ 40 (2%)</div>
-                                    <div className="stat-desc ">2023년 기준</div>
-                                </div>
-                                <div className="stat place-items-center">
-                                    <div className="stat-title">중위연봉</div>
-                                    <div className="stat-value">5000만원</div>
-                                    <div className="stat-desc ">↗︎ 40 (2%)</div>
-                                    <div className="stat-desc ">2023년 기준</div>
-                                </div>
-                            </div>
-                        </div>
+                            </>
+                        ) : null}
                     </div>
                 </section>
                 <section className="py-8 px-4">
-                    <Table/>
+                    {contributions != null ? <Table key={1} {...contributions} /> : null}
                 </section>
             </div>
         </div>
@@ -153,6 +248,13 @@ const TrendingUpIcon: React.FC<IconProps> = ({ className }) => (
     <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
         <polyline points="17 6 23 6 23 12"></polyline>
+    </svg>
+);
+
+const TrendingDownIcon: React.FC<IconProps> = ({ className }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
+        <polyline points="17 18 23 18 23 12"></polyline>
     </svg>
 );
 
