@@ -28,6 +28,7 @@ export default function Navbar() {
                             <ul className="p-2 bg-base-100 rounded-t-none z-10">
                                 <li><Link href={"/salary/location"}>지역별</Link></li>
                                 <li><Link href={"/salary/industry"}>산업별</Link></li>
+                                <li><Link href={"/salary/receive"}>연봉실수령액표</Link></li>
                             </ul>
                         </details>
                     </li>

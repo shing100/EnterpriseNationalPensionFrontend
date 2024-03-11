@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 import {SearchIcon} from "@heroicons/react/solid";
 import {useForm} from "react-hook-form";
 
-const fetchRecruitList = async (keyword: string, location: string, industry: string, page: string, size: string = "110") => {
+const fetchRecruitList = async (keywords: string, location: string, industry: string, page: string, size: string = "110") => {
     const params = new URLSearchParams({
-        keyword,
+        keywords,
         location,
         industry,
         page: page,
@@ -25,13 +25,13 @@ function RecruitList() {
     const [jobData, setJobData] = useState(null);
     const {register, handleSubmit} = useForm();
     const onSubmit = async (data: any) => {
-        const result = await fetchRecruitList(data.keyword, data.location, data.jobType, "1");
+        const result = await fetchRecruitList(data.keywords, data.location, data.jobType, "1");
         setJobData(result);
     };
 
     useEffect(() => {
         const fetchData = async () => {
-            const data = await fetchRecruitList({keyword: "", location: "", industry: "", page: "1" });
+            const data = await fetchRecruitList({keywords: "", location: "", industry: "", page: "1" });
             setJobData(data);
         };
 
@@ -44,7 +44,7 @@ function RecruitList() {
         </div>;
     }
 
-    if (!jobData) {
+    if (!jobData && !jobData?.jobs.job) {
         return <div className="flex items-center justify-center h-screen">
             <div className="text-xl font-bold text-center">Loading...</div>
         </div>;
@@ -58,7 +58,7 @@ function RecruitList() {
                         <SearchIcon className="h-5 w-5 text-gray-400"/>
                     </div>
                     <input
-                        {...register("keyword")}
+                        {...register("keywords")}
                         className="input input-bordered w-full pl-10"
                         type="text"
                         placeholder="검색어 입력..."
@@ -86,7 +86,7 @@ function RecruitList() {
             </form>
             <h2 className="text-2xl font-semibold mb-4 mt-6">채용 공고</h2>
             <div className="grid gap-6 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-4">
-                {jobData && jobData.jobs?.map((job :any)  => (
+                {jobData && jobData.jobs.job?.map((job :any)  => (
                     <div key={job.id} className="card bg-base-100 shadow-xl">
                         <div className="card-body">
                             <h3 className="card-title text-lg font-bold">{job.position.title}</h3>

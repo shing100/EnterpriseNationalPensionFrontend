@@ -75,3 +75,12 @@ export function useMonthlyStat() {
         isError: error
     }
 }
+
+export function useLocationStatList() {
+    const { data, error } = useSWR<ApiResponse>(`${API_BASE_URL}/insight/location/list`, fetchWithSWR);
+    return {
+        locationSalaryStatList: data?.resultList,
+        isLoading: !error && !data,
+        isError: error
+    }
+}
