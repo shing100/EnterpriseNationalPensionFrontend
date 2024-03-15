@@ -2,6 +2,7 @@
 
 import React, {useEffect, useState} from "react";
 import {formatNumberWithCommas} from "@/libs/utils";
+import {DiscussionEmbed} from "disqus-react";
 
 const salaryData = [
     { salary: '1,000만원', netSalary: 771033, totalDeduction: 62300, nationalPension: 32990, healthInsurance: 22870, longTermCare: 1680, employmentInsurance: 4760, incomeTax: 0, localIncomeTax: 0 },
@@ -228,6 +229,19 @@ export default function LocationSalaryStat() {
                     </tbody>
                 </table>
             </div>
+            <hr className="mt-1 mb-8" />
+            <DiscussionEmbed
+                key="IndustrySalaryStat"
+                shortname='insight-jov'
+                config={
+                    {
+                        url: "http://localhost:3000/salary/receive",
+                        identifier: "receive",
+                        title: "연봉실수령액표.",
+                        language: 'ko',
+                    }
+                }
+            />
         </div>
     );
 }

@@ -15,12 +15,10 @@ const fetchWithSWR = async (url: string) => {
     const response = await fetch(url, {
         headers: {
             'Content-Type': 'application/json',
-            // 필요한 경우 추가 헤더를 여기에 추가하세요.
         },
     });
 
     if (!response.ok) {
-        // 서버에서 응답이 성공적이지 않은 경우
         throw new Error(`Server responded with status: ${response.status}`);
     }
 
