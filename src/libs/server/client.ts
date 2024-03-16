@@ -8,7 +8,25 @@ interface ApiResponse {
     error?: string;
 }
 
-const API_BASE_URL = 'http://localhost:8080';
+export const fetchRecruitList = async (keywords: string, location: string, industry: string, page: string, size: string = "110") => {
+    const params = new URLSearchParams({
+        keywords,
+        location,
+        industry,
+        page: page,
+        size: size,
+    });
+
+    const response = await fetch(`${API_BASE_URL}/insight/saramin/job-list?${params.toString()}`, {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    return response.json();
+};
+
+const API_BASE_URL = 'http://128.199.127.167:9000';
 
 // useSWR에 사용할 fetcher 함수
 const fetchWithSWR = async (url: string) => {

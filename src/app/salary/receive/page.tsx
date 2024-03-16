@@ -147,7 +147,7 @@ export default function LocationSalaryStat() {
         firstMillionRow.push(salaryData.findIndex((item : any) => parseInt(item.netSalary, 10) >= (i + 1) * 1000000));
     }
     setHighlightedRow(firstMillionRow);
-}, [salaryData]); // Update on salaryData change
+}, []);
 
     return (
         <div className="min-h-screen p-8">

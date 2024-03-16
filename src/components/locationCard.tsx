@@ -1,5 +1,6 @@
 import { useState } from "react";
 import formatSalaryToMillionWon from "@/libs/utils";
+import Image from 'next/image'
 
 export default function LocationCard({ location }: any) {
     const [activeTab, setActiveTab] = useState('salary');
@@ -7,7 +8,7 @@ export default function LocationCard({ location }: any) {
     return (
         <div className="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow duration-300">
             <figure className="px-6 pt-6">
-                <img src={location.logo} alt={`${location.name} logo`} className="rounded-md h-20 mx-auto" />
+                <Image src={location.logo} alt={`${location.name} logo`} className="rounded-md h-20 mx-auto" />
             </figure>
             <div className="card-body items-center text-center">
                 <h3 className="card-title text-2xl font-bold mb-2">{location.name}</h3>

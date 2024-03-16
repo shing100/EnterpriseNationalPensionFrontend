@@ -1,6 +1,6 @@
 import { CompanyData } from '@/types';
 import formatSalaryToMillionWon from "@/libs/utils";
-
+import Image from 'next/image'
 export default function Card(data: CompanyData) {
     return (
         <div className="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow duration-300">
@@ -8,7 +8,7 @@ export default function Card(data: CompanyData) {
                 <h2 className="card-title">
                     <div className="avatar">
                         <div className="w-12 rounded-xl">
-                            <img src="https://w7.pngwing.com/pngs/244/422/png-transparent-samsung-electronics-plug-in-printer-samsung-blue-text-trademark.png" />
+                            <Image src="https://w7.pngwing.com/pngs/244/422/png-transparent-samsung-electronics-plug-in-printer-samsung-blue-text-trademark.png"  alt={"company"}/>
                         </div>
                     </div>
                     {data.companyName}

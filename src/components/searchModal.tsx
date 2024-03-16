@@ -1,5 +1,6 @@
 "use client";
 import React, {useState} from "react";
+import Image from 'next/image'
 
 interface SearchPageProps {
     onClose: () => void
@@ -60,7 +61,7 @@ export default function SearchPage({onClose}: SearchPageProps) {
                         {Array.from({ length: 5 }).map((_, index) => (
                             <div key={index} className="flex w-full bg-gray-100 rounded-md">
                                 <figure className="flex-none w-16 h-16 bg-white m-4 rounded-xl">
-                                    <img className="w-12 h-12 m-auto my-2" src="/default_company.png" alt="Company" />
+                                    <Image className="w-12 h-12 m-auto my-2" src="/default_company.png" alt="Company" />
                                 </figure>
                                 <div className="my-auto">
                                     <h2 className="text-md font-bold">기업명 #{index + 1}</h2>

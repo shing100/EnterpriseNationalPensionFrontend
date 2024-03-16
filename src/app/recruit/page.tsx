@@ -6,13 +6,13 @@ import {fetchRecruitList} from "@/libs/server/client";
 
 interface JobData {
     jobs: {
-        job: any[];
+        job?: any[];
     };
     message: string;
 }
 
 function RecruitList() {
-    const [jobData, setJobData] = useState<JobData>();
+    const [jobData, setJobData] = useState<JobData | null>(null);
     const {register, handleSubmit} = useForm();
     const onSubmit = async (data: any) => {
         const result = await fetchRecruitList(data.keywords, data.location, data.jobType, "1");
@@ -35,7 +35,7 @@ function RecruitList() {
         </div>;
     }
 
-    if (!jobData && !jobData?.jobs.job) {
+    if (!jobData || !jobData?.jobs?.job) {
         return <div className="flex items-center justify-center h-screen">
             <div className="text-xl font-bold text-center">Loading...</div>
         </div>;
