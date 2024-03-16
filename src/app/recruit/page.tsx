@@ -2,27 +2,17 @@
 import React, { useEffect, useState } from "react";
 import {SearchIcon} from "@heroicons/react/solid";
 import {useForm} from "react-hook-form";
+import {fetchRecruitList} from "@/libs/server/client";
 
-const fetchRecruitList = async (keywords: string, location: string, industry: string, page: string, size: string = "110") => {
-    const params = new URLSearchParams({
-        keywords,
-        location,
-        industry,
-        page: page,
-        size: size,
-    });
-
-    const response = await fetch(`http://localhost:8080/insight/saramin/job-list?${params.toString()}`, {
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    });
-
-    return response.json();
-};
+interface JobData {
+    jobs: {
+        job: any[];
+    };
+    message: string;
+}
 
 function RecruitList() {
-    const [jobData, setJobData] = useState(null);
+    const [jobData, setJobData] = useState<JobData>();
     const {register, handleSubmit} = useForm();
     const onSubmit = async (data: any) => {
         const result = await fetchRecruitList(data.keywords, data.location, data.jobType, "1");
@@ -31,6 +21,7 @@ function RecruitList() {
 
     useEffect(() => {
         const fetchData = async () => {
+            // @ts-ignore
             const data = await fetchRecruitList({keywords: "", location: "", industry: "", page: "1" });
             setJobData(data);
         };
