@@ -14,7 +14,7 @@ export default function SearchPage() {
                     <div className="flex space-x-4">
                         {/* 기업 정보 카드 */}
                         <div className="card w-80 bg-gray-100 shadow-xl">
-                            <figure><Image src="company-logo-url.jpg" alt="Company" /></figure>
+                            <figure><Image width={16} height={16} src="company-logo-url.jpg" alt="Company" /></figure>
                             <div className="card-body">
                                 <h2 className="card-title">기업명</h2>
                                 <p>기업에 대한 간단한 설명입니다.</p>

@@ -27,7 +27,7 @@ export default function Table(data: { [key: number]: CompanyData }) {
                                 <div className="flex items-center gap-3">
                                     <div className="avatar">
                                         <div className="mask mask-squircle w-12 h-12">
-                                            <Image src="https://w7.pngwing.com/pngs/244/422/png-transparent-samsung-electronics-plug-in-printer-samsung-blue-text-trademark.png" alt="Avatar Tailwind CSS Component" />
+                                            <img src="https://w7.pngwing.com/pngs/244/422/png-transparent-samsung-electronics-plug-in-printer-samsung-blue-text-trademark.png" alt="Avatar Tailwind CSS Component" />
                                         </div>
                                     </div>
                                     <div>
