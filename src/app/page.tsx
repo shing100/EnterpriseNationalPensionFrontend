@@ -3,24 +3,41 @@ import React, {useState, useEffect} from "react";
 import Card from "@/components/card";
 import Table from "@/components/table";
 import SearchPage from "@/components/searchModal";
-import {
-    useMonthlyStat,
-    useAverageSalary,
-    useInsightRecomCompany,
-    useInsightTopContributions
-} from "@/libs/server/client";
 import formatSalaryToMillionWon, {formatNumberWithCommas} from "@/libs/utils";
+import axios from "axios";
+import useSWR from "swr";
+import {CompanyData} from "@/types";
 
 interface IconProps {
     className?: string;
 }
 
+interface MonthlyStatResponse {
+    ok: boolean;
+    data: {
+        averageSalary: any,
+        insightRecomCompany: {
+            resultList: CompanyData[];
+            resultCnt: number;
+        },
+        insightTopContributions: {
+            resultCnt: number;
+            resultList: CompanyData[];
+        },
+        monthlyStat: any,
+    };
+    errors: string[];
+}
+
+const fetcher = (url : string) => axios.get(url).then(res => res.data);
+
 export default function Home() {
-    const { companies, isLoading, isError } = useInsightRecomCompany('202401', 'desc', 4, 100);
-    const { contributions, isLoading : cLoading, isError : cIsError } = useInsightTopContributions(10);
-    const { averageSalary, isLoading: aLoading, isError: aIsError } = useAverageSalary();
-    const { monthlyStat, isLoading: mLoading, isError: mIsError } = useMonthlyStat();
     const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+    const { data , error } = useSWR<MonthlyStatResponse>('/api/todayStat', fetcher);
+    const monthlyStat = data?.data.monthlyStat;
+    const averageSalary = data?.data.averageSalary;
+    const contributions = data?.data.insightTopContributions;
+    const insightRecomCompany = data?.data.insightRecomCompany;
 
     const handleSearchClick = () => {
         setIsSearchModalOpen(true); // 검색 아이콘 클릭시 모달 열기
@@ -53,22 +70,22 @@ export default function Home() {
                     <div className={"container mx-auto"}>
                         <h1 className={"text-3xl font-bold mb-4"}>오늘의 기업</h1>
                         <div className="grid gap-x-10 gap-y-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-                            {companies && companies.map((company: any) => (
+                            {data?.data && data?.data?.insightRecomCompany.resultList.map((company: any) => (
                                 <Card key={company.id} {...company} />
                             ))}
                         </div>
                     </div>
                 </section>
                 <section className={"py-8 px-4"}>
-                    {monthlyStat != null ? (
+                    {data?.data.monthlyStat != null ? (
                     <div>
                         <h2 className="text-3xl font-bold mb-4">오늘의 인사이트</h2>
                         <div className="w-full h-52 stats shadow hover:shadow-xl transition-shadow duration-300">
                             <div className="stat place-items-center">
                                 <BuildingIcon className="w-12 h-12 text-black"/>
                                 <div className="stat-title">확인된 기업</div>
-                                <div className="stat-value">{formatNumberWithCommas(monthlyStat.totalCompanyCount)}개</div>
-                                {monthlyStat.totalCompanyRate > 0 ? (
+                                <div className="stat-value">{formatNumberWithCommas(data?.data.monthlyStat.totalCompanyCount)}개</div>
+                                {data?.data.monthlyStat.totalCompanyRate > 0 ? (
                                     <><div className="stat-desc text-sm text-red-700">
                                         ↗︎ {Math.abs(monthlyStat.totalCompanyRate)}% ({formatNumberWithCommas(monthlyStat.totalCompanyCount - monthlyStat.beforeTotalCompanyCount)}개)
                                     </div></>
@@ -219,7 +236,7 @@ export default function Home() {
                     </div>
                 </section>
                 <section className="py-8 px-4">
-                    {contributions != null ? <Table key={1} {...contributions} /> : null}
+                    {contributions != null ? <Table key={1} {...contributions.resultList} /> : null}
                 </section>
             </div>
         </div>
