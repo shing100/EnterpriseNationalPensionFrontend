@@ -14,10 +14,27 @@ interface JobData {
 
 const fetcher = (url : string) => axios.get(url).then(res => res.data);
 
+function useDebounce(value : any, delay : any) {
+    const [debouncedValue, setDebouncedValue] = useState(value);
+
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedValue(value);
+        }, delay);
+
+        return () => {
+            clearTimeout(handler);
+        };
+    }, [value, delay]);
+
+    return debouncedValue;
+}
+
+
 function RecruitList() {
 
     const {register, handleSubmit, watch} = useForm();
-    const keywords = watch("keywords");
+    const keywords = useDebounce(watch("keywords"), 1000);
     const location = watch("location");
     const jobType = watch("jobType");
 

@@ -9,9 +9,9 @@ const CompanyCard = (company : CompanyData) => {
     };
 
     return (
-        <div className="flex max-w-lg bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 lg:max-w-screen-lg">
-            {/* 이미지를 포함하는 div */}
-            <div className="flex p-6">
+        <div className="flex flex-col lg:flex-row max-w-lg bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 lg:max-w-screen-lg">
+            {/* 이미지를 포함하는 div: 위치 조정을 위해 필요한 클래스를 추가할 수 있습니다. */}
+            <div className="flex justify-center lg:justify-start p-6">
                 <img className="rounded-md" src="/default_company.png" alt="Company Logo" width={130} height={60} />
             </div>
             {/* 텍스트 컨텐츠를 포함하는 div */}
