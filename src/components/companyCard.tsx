@@ -1,5 +1,5 @@
 // CompanyCard.js
-import formatSalaryToMillionWon from "@/libs/utils";
+import formatSalaryToMillionWon, {formatNumberWithCommas} from "@/libs/utils";
 import {CompanyData} from "@/types";
 
 const CompanyCard = (company : CompanyData) => {
@@ -18,10 +18,11 @@ const CompanyCard = (company : CompanyData) => {
             <div className="p-6">
                 <h5 className="text-lg font-semibold tracking-tight text-gray-900 mb-2">{company.originalCompanyName}</h5>
                 <p className="text-gray-700 mb-1">{company.companyIndustryName} | {company.companyRoadNameAddress}</p>
-                <p className="text-gray-700 mb-1">{formatSalaryToMillionWon(company.averageSalary)}</p>
-                <p className="text-gray-700">전체 : {company.totalMemberCount}명 | 입사: {company.newMemberCount}명 ({getPercentage(company.newMemberCount, company.totalMemberCount)}) | 퇴사: {company.lostMemberCount}명 ({getPercentage(company.lostMemberCount, company.totalMemberCount)})</p>
-                <div className="pt-5 flex items-center justify-between">
-                    <span className="text-xs font-medium text-blue-600 bg-blue-100 rounded-full px-3 py-1">산업평균 {formatSalaryToMillionWon(company.averageSalary)}</span>
+                <p className="text-gray-700 mb-1">평균연봉 : {formatSalaryToMillionWon(company.averageSalary)}</p>
+                <p className="text-gray-700">전체 : {formatNumberWithCommas(company.totalMemberCount)}명 | 입사: {company.newMemberCount}명 ({getPercentage(company.newMemberCount, company.totalMemberCount)}) | 퇴사: {company.lostMemberCount}명 ({getPercentage(company.lostMemberCount, company.totalMemberCount)})</p>
+                <div className="pt-5 flex items-center">
+                    <span className="text-xs font-medium text-blue-600 bg-blue-100 rounded-full px-3 py-1">산업평균 {formatSalaryToMillionWon(company.industryAverageSalary)}</span>
+                    <span className="text-xs font-medium text-blue-600 bg-blue-100 rounded-full px-3 py-1">산업25% {formatSalaryToMillionWon(company.industryUpperQuartileSalary)}</span>
                     <span className="text-xs font-medium text-red-600 bg-red-100 rounded-full px-3 py-1">기준일 {company.year}년 {company.month}월</span>
                 </div>
             </div>

@@ -9,10 +9,11 @@ export const GET = async (req : NextRequest, res : NextResponse) => {
     const searchParams = new URLSearchParams(req.url.split("?")[1]);
     const location = searchParams.get('location') || "";
     const industry = searchParams.get('industry') || "";
-    const sort = searchParams.get('sort') || "currentMonthDueAmount";
+    const sort = searchParams.get('sort') || "";
     const size = Number(searchParams.get('size')) || 10;
     const minMemberCount = Number(searchParams.get('minMemberCount')) || 0;
+    const companyName: string = searchParams.get('companyName') || "";
 
-    const result = await getCompanyinfoList(location, industry, sort, size, minMemberCount).then(stat => stat);
+    const result = await getCompanyinfoList(companyName, location, industry, sort, size, minMemberCount).then(stat => stat);
     return NextResponse.json(result);
 }

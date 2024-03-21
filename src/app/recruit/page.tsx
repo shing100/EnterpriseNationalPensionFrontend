@@ -79,7 +79,7 @@ function RecruitList() {
                         <div className="card-body">
                             <h3 className="card-title text-lg font-bold">{job.position.title}</h3>
                             <p className="text-sm">{job.company.detail.name}</p>
-                            <p className="text-sm font-semibold">{job.position.location.name.replace("&gt;", ">")}</p>
+                            <p className="text-sm font-semibold">{job.position.location.name?.replace("&gt;", ">")}</p>
                             <p className="text-sm">{job.position.industry.name} , {job.keyword}</p>
                             <div className="flex justify-between items-center mt-4">
                                 <a

@@ -54,14 +54,14 @@ export function getIndustryStatList(size: number = 20, sort: string) {
     return instance.post(`/insight/industry/list?${params.toString()}`).then((response) => response.data);
 }
 
-export function getCompanyinfoList(location: string = '', industry: string = '', sort: string, size: number, minMemberCount: number) {
+export function getCompanyinfoList(companyName: string, location: string = '', industry: string = '', sort: string, size: number, minMemberCount: number) {
     const currentDate = new Date();
     currentDate.setMonth(currentDate.getMonth() - 2);
     const year = currentDate.getFullYear();
     const month = String(currentDate.getMonth() + 1).padStart(2, '0');
     const formattedDate = `${year}${month}`;
 
-    const params = new URLSearchParams({date: formattedDate, location: location, industry: industry, sort: sort, size: size.toString(), minMemberCount: minMemberCount.toString(),});
+    const params = new URLSearchParams({company: companyName, date: formattedDate, location: location, industry: industry, sort: sort, size: size.toString(), minMemberCount: minMemberCount.toString(),});
 
     return instance.post(`/insight/company/list?${params.toString()}`).then((response) => response.data);
 }
