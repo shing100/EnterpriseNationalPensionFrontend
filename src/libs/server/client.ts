@@ -1,17 +1,16 @@
 import axios from 'axios';
-import useSWR from "swr";
 
 const API_BASE_URL = 'http://128.199.127.167:9000';
 
 const instance = axios.create({
     baseURL: API_BASE_URL,
-    timeout: 1000,
+    timeout: 5000,
     headers: {
         'Content-Type': 'application/json',
     },
 });
 
-export const fetchRecruitList = async (keywords: string, location: string, industry: string, page: string, size: string = "110") => {
+export const getRecruitList = async (keywords: string, location: string, industry: string, page: string, size: string = "110") => {
     const params = new URLSearchParams({ keywords, location, industry, page, size });
     const response = await instance.get(`/insight/saramin/job-list?${params.toString()}`);
     return response.data;
@@ -35,16 +34,36 @@ function getMonthlyStat() {
     return instance.get(`/insight/monthly`).then((response) => response.data);
 }
 
-export function getLocationStatList() {
-    return instance.get(`/insight/location/list`).then((response) => response.data);
+export function getLocationStatList(size: number = 20, sort: string) {
+    const currentDate = new Date();
+    currentDate.setMonth(currentDate.getMonth() - 2);
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const formattedDate = `${year}${month}`;
+    const params = new URLSearchParams({date: formattedDate, size: size.toString(), sort: sort});
+    return instance.post(`/insight/location/list?${params.toString()}`).then((response) => response.data);
 }
 
-export function getIndustryStatList() {
-    return instance.get(`/insight/location/list`).then((response) => response.data);
+export function getIndustryStatList(size: number = 20, sort: string) {
+    const currentDate = new Date();
+    currentDate.setMonth(currentDate.getMonth() - 2);
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const formattedDate = `${year}${month}`;
+    const params = new URLSearchParams({date: formattedDate, size: size.toString(), sort: sort});
+    return instance.post(`/insight/industry/list?${params.toString()}`).then((response) => response.data);
 }
 
-export function getCompanyStatList() {
-    return instance.get(`/insight/company/list`).then((response) => response.data);
+export function getCompanyinfoList(location: string = '', industry: string = '', sort: string, size: number, minMemberCount: number) {
+    const currentDate = new Date();
+    currentDate.setMonth(currentDate.getMonth() - 2);
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const formattedDate = `${year}${month}`;
+
+    const params = new URLSearchParams({date: formattedDate, location: location, industry: industry, sort: sort, size: size.toString(), minMemberCount: minMemberCount.toString(),});
+
+    return instance.post(`/insight/company/list?${params.toString()}`).then((response) => response.data);
 }
 
 export async function getTodayStat() {

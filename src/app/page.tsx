@@ -37,7 +37,6 @@ export default function Home() {
     const monthlyStat = data?.data.monthlyStat;
     const averageSalary = data?.data.averageSalary;
     const contributions = data?.data.insightTopContributions;
-    const insightRecomCompany = data?.data.insightRecomCompany;
 
     const handleSearchClick = () => {
         setIsSearchModalOpen(true); // 검색 아이콘 클릭시 모달 열기

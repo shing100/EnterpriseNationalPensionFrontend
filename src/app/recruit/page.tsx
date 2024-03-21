@@ -2,7 +2,8 @@
 import React, { useEffect, useState } from "react";
 import {SearchIcon} from "@heroicons/react/solid";
 import {useForm} from "react-hook-form";
-import {fetchRecruitList} from "@/libs/server/client";
+import useSWR from "swr";
+import axios from "axios";
 
 interface JobData {
     jobs: {
@@ -11,23 +12,19 @@ interface JobData {
     message: string;
 }
 
+const fetcher = (url : string) => axios.get(url).then(res => res.data);
+
 function RecruitList() {
-    const [jobData, setJobData] = useState<JobData | null>(null);
-    const {register, handleSubmit} = useForm();
-    const onSubmit = async (data: any) => {
-        const result = await fetchRecruitList(data.keywords, data.location, data.jobType, "1");
-        setJobData(result);
-    };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            // @ts-ignore
-            const data = await fetchRecruitList({keywords: "", location: "", industry: "", page: "1" });
-            setJobData(data);
-        };
+    const {register, handleSubmit, watch} = useForm();
+    const keywords = watch("keywords");
+    const location = watch("location");
+    const jobType = watch("jobType");
 
-        fetchData();
-    }, []); // 의존성 배열에 변수를 추가하여 검색 조건이 변경될 때마다 데이터를 새로 가져올 수 있습니다.
+    const queryString = `keywords=${keywords || ''}&location=${location || ''}&industry=${jobType || ''}`;
+    const { data: jobData, error } = useSWR<JobData>(`/api/recruit?${queryString}`, fetcher);
+
+    console.log(jobData);
 
     if (jobData?.message === "일일 최대 요청 가능 횟수가 초과되었습니다.") {
         return <div className="flex items-center justify-center h-screen">
@@ -43,7 +40,7 @@ function RecruitList() {
 
     return (
         <div className="max-w-screen-2xl mx-auto py-8 px-4 min-h-screen">
-            <form onSubmit={handleSubmit(onSubmit)} className="p-5 bg-white shadow rounded-lg flex gap-4 items-end">
+            <form onSubmit={handleSubmit(() => {})} className="p-5 bg-white shadow rounded-lg flex gap-4 items-end">
                 <div className="relative w-full">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <SearchIcon className="h-5 w-5 text-gray-400"/>

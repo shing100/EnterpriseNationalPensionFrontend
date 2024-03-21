@@ -75,3 +75,19 @@ export interface MonthlyStatData {
     totalEmployedMemberRate: number;
     totalCompanyRate: number;
 }
+
+export interface LocationStatData {
+    locationName: string;
+    locationAverageSalary: number;
+    locationMedianSalary: number;
+    locationUpperQuartileSalary: number;
+    locationLowerQuartileSalary: number;
+    newMemberCount: number;
+    lostMemberCount: number;
+    locationCompanyCount: number;
+    totalMemberCount: number;
+    date: string;
+    year: number;
+    month: number;
+    regDt: string;
+}

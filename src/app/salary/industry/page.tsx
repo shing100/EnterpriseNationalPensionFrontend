@@ -91,7 +91,7 @@ export default function IndustrySalaryStat() {
             <h2 className="text-3xl font-bold mb-8 text-center">산업 정보</h2>
             <div className="mb-8">
                 <h3 className="text-2xl font-bold mb-4 p-2">평균 연봉이 높은 산업 TOP 4</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {topByAverageSalary.map(industry => (
                         <IndustryCard key={industry.id} industry={industry} />
                     ))}
@@ -100,7 +100,7 @@ export default function IndustrySalaryStat() {
             <hr className="my-4"></hr>
             <div className="mb-8">
                 <h3 className="text-2xl font-bold mb-4 p-2">가장 많은 근로자를 가진 산업 TOP 4</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {topByTotalMembers.map(industry => (
                         <IndustryCard key={industry.id} industry={industry} />
                     ))}
@@ -108,7 +108,7 @@ export default function IndustrySalaryStat() {
             </div>
             <div className="mb-8">
                 <h3 className="text-2xl font-bold mb-4 p-2">많이 채용한 산업 TOP 4</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {topByTotalMembers.map(industry => (
                         <IndustryCard key={industry.id} industry={industry} />
                     ))}
@@ -116,7 +116,7 @@ export default function IndustrySalaryStat() {
             </div>
             <div className="mb-8">
                 <h3 className="text-2xl font-bold mb-4 p-2">많이 퇴사한 산업 TOP 4</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {topByTotalMembers.map(industry => (
                         <IndustryCard key={industry.id} industry={industry} />
                     ))}
