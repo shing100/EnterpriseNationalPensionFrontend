@@ -1,4 +1,8 @@
 export interface IndustryData {
+    id: string;
+    date: string;
+    year: number;
+    month: number;
     companyIndustryName: string;
     industryAverageSalary: number;
     industryMedianSalary: number;
