@@ -1,4 +1,4 @@
-import formatSalaryToMillionWon from "@/libs/utils";
+import formatSalaryToMillionWon, {formatNumberWithCommas} from "@/libs/utils";
 
 const IndustryCard = ({industry} : any) => {
     return (
@@ -22,16 +22,16 @@ const IndustryCard = ({industry} : any) => {
                     </div>
                     <div className="stats">
                         <div className="stat">
-                            <div className="stat-title text-sm">노동자 수</div>
-                            <div className="stat-value text-sm">{industry.totalMemberCount}명</div>
+                            <div className="stat-title text-sm">전체</div>
+                            <div className="stat-value text-sm">{formatNumberWithCommas(industry.totalMemberCount)}명</div>
                         </div>
                         <div className="stat">
-                            <div className="stat-title text-sm">취업자 수</div>
-                            <div className="stat-value text-sm">{industry.newMemberCount}명</div>
+                            <div className="stat-title text-sm">입사</div>
+                            <div className="stat-value text-sm">{formatNumberWithCommas(industry.newMemberCount)}명</div>
                         </div>
                         <div className="stat">
-                            <div className="stat-title text-sm">탈출자 수</div>
-                            <div className="stat-value text-sm">{industry.lostMemberCount}명</div>
+                            <div className="stat-title text-sm">퇴사</div>
+                            <div className="stat-value text-sm">{formatNumberWithCommas(industry.lostMemberCount)}명</div>
                         </div>
                     </div>
                 </div>

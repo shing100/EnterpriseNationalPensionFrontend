@@ -1,4 +1,3 @@
-import { useState } from "react";
 import formatSalaryToMillionWon, {formatNumberWithCommas} from "@/libs/utils";
 import Image from 'next/image'
 import {LocationStatData} from "@/types";
