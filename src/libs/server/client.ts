@@ -42,7 +42,7 @@ export function getLocationStatList(locationName: string | null, size: string = 
     const formattedDate = `${year}${month}`;
     const params = new URLSearchParams();
     if (locationName !== null) {
-        params.append('locationName', locationName);
+        params.append('location', locationName);
     }
     params.append('date', formattedDate);
     params.append('size', size.toString());
