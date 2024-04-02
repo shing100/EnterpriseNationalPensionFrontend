@@ -5,6 +5,7 @@ import CompanyCard from "@/components/companyCard";
 import useSWR, {mutate} from "swr";
 import {CompanyData} from "@/types";
 import {useForm} from "react-hook-form";
+import Link from "next/link";
 
 interface Companyinfo {
     resultCnt: number,
@@ -52,7 +53,9 @@ export default function CompanyInfoView() {
 
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
                     {companies?.resultList.map((company, index) => (
-                        <CompanyCard key={index} {...company} />
+                        <Link href={`/company/${company.id}`} key={index}>
+                            <CompanyCard key={index} {...company} />
+                        </Link>
                     ))}
                 </div>
 

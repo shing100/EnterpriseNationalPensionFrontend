@@ -1,76 +1,91 @@
 "use client";
-import React, {useEffect, useState} from 'react';
-import { DiscussionEmbed } from 'disqus-react';
-import CompanyCard from "@/components/companyCard";
-import useSWR, {mutate} from "swr";
-import {CompanyData} from "@/types";
-import {useForm} from "react-hook-form";
+import React, { useState, useEffect } from 'react';
+import formatSalaryToMillionWon, { formatNumberWithCommas } from '@/libs/utils';
+import SalaryLineChart from "@/components/salaryLineChart";
 
-interface Companyinfo {
-    resultCnt: number,
-    resultList: CompanyData[]
+interface GraphData {
+    year: number;
+    averageSalary: number;
+    medianSalary: number;
+    upperQuartileSalary: number;
 }
 
-const fetcher = (url: string) => fetch(url).then(res => res.json());
-
-export default function CompanyInfoView() {
-    const { register, handleSubmit, formState: { errors }, watch } = useForm();
-    const companyName = watch("companyName");
-    const { data: companies, isLoading } = useSWR<Companyinfo>(`/api/company?sort=&size=20&companyName=${companyName}`, fetcher);
-
-    // 입력값 디바운스를 위한 상태
-    const [debouncedCompanyName, setDebouncedCompanyName] = useState(companyName);
+const CompanyDetailPage = ({ params }: { params: { id: string } }) => {
+    const [industryData, setIndustryData] = useState<any>(null);
+    const [graphData, setGraphData] = useState<GraphData[]>([]);
 
     useEffect(() => {
-        const handler = setTimeout(() => {
-            setDebouncedCompanyName(companyName);
-            // SWR 키 변경으로 인한 데이터 재요청
-            mutate(`/api/company?sort=&size=20&companyName=${companyName}`);
-        }, 1000); // 1초 딜레이
-
-        return () => {
-            clearTimeout(handler);
+        // 여기서 industryId를 사용하여 API 호출 등의 작업을 수행하여 industryData와 graphData를 설정합니다.
+        // 예시로 다음과 같은 데이터를 사용했습니다.
+        const sampleData = {
+            companyIndustryName: '정보통신업',
+            industryAverageSalary: 5000000,
+            industryMedianSalary: 4500000,
+            industryUpperQuartileSalary: 6000000,
+            totalMemberCount: 10000,
+            newMemberCount: 1000,
+            lostMemberCount: 500,
         };
-    }, [companyName]);
+        setIndustryData(sampleData);
+
+        const sampleGraphData: GraphData[] = [
+            { year: 2020, averageSalary: 4800000, medianSalary: 4300000, upperQuartileSalary: 5700000 },
+            { year: 2021, averageSalary: 4900000, medianSalary: 4400000, upperQuartileSalary: 5800000 },
+            { year: 2022, averageSalary: 5000000, medianSalary: 4500000, upperQuartileSalary: 6000000 },
+            { year: 2023, averageSalary: 5100000, medianSalary: 4600000, upperQuartileSalary: 6100000 },
+        ];
+        setGraphData(sampleGraphData);
+    }, [params]);
+
+    if (!industryData) {
+        return <div>Loading...</div>;
+    }
 
     return (
-        <div className="min-h-screen p-8">
-            <div className="container mx-auto">
-                <h1 className="text-4xl font-bold text-center mb-12">기업 정보</h1>
-                <div className="flex items-center justify-center mb-8 mt-4">
-                    <div className="form-control w-full">
-                        <div className="input-group">
-                            <span className="input-group-text w-12">
-                                <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                                </svg>
-                            </span>
-                            <input type="text" placeholder="기업명을 입력하세요..." className="input input-bordered w-full" {...register("companyName")} />
+        <div className="container mx-auto my-8">
+            <div className="bg-base-100 shadow-xl hover:shadow-2xl transition-shadow duration-300 p-8">
+                <h1 className="text-3xl font-bold mb-4">{industryData.companyIndustryName}</h1>
+                <div className="stats">
+                    <div className="stat">
+                        <div className="stat-title text-md">평균 연봉</div>
+                        <div className="stat-value text-sm">{formatSalaryToMillionWon(industryData.industryAverageSalary)}</div>
+                    </div>
+                    <div className="stat">
+                        <div className="stat-title text-md">중위 연봉</div>
+                        <div className="stat-value text-sm">{formatSalaryToMillionWon(industryData.industryMedianSalary)}</div>
+                    </div>
+                    <div className="stat">
+                        <div className="stat-title text-md">상위 25%</div>
+                        <div className="stat-value text-sm">
+                            {formatSalaryToMillionWon(industryData.industryUpperQuartileSalary)}
                         </div>
                     </div>
                 </div>
-
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                    {companies?.resultList.map((company, index) => (
-                        <CompanyCard key={index} {...company} />
-                    ))}
+                <div className="stats">
+                    <div className="stat">
+                        <div className="stat-title text-sm">전체</div>
+                        <div className="stat-value text-sm">{formatNumberWithCommas(industryData.totalMemberCount)}명</div>
+                    </div>
+                    <div className="stat">
+                        <div className="stat-title text-sm">입사</div>
+                        <div className="stat-value text-sm">{formatNumberWithCommas(industryData.newMemberCount)}명</div>
+                    </div>
+                    <div className="stat">
+                        <div className="stat-title text-sm">퇴사</div>
+                        <div className="stat-value text-sm">{formatNumberWithCommas(industryData.lostMemberCount)}명</div>
+                    </div>
                 </div>
-
-                {/* Disqus 댓글 시스템 */}
-                <hr className={"my-8"}></hr>
-                <DiscussionEmbed
-                    key="CompanyInfoView"
-                    shortname='insight-jov'
-                    config={
-                        {
-                            url: "http://localhost:3000/company",
-                            identifier: "CompanyInfoView",
-                            title: "기업정보",
-                            language: 'ko',
-                        }
-                    }
-                />
+                <div className="mt-8 px-4">
+                    <h2 className="text-2xl font-bold mb-4">연도별 연봉 추이</h2>
+                    <SalaryLineChart graphData={graphData} />
+                </div>
+                <div className="mt-8 px-4">
+                    <h2 className="text-2xl font-bold mb-4">연도별 입/퇴사 추이</h2>
+                    <SalaryLineChart graphData={graphData} />
+                </div>
             </div>
         </div>
     );
-}
+};
+
+export default CompanyDetailPage;

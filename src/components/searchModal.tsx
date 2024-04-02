@@ -1,13 +1,39 @@
 "use client";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Image from 'next/image'
+import useSWR, {mutate} from "swr";
+import {CompanyData} from "@/types";
 
 interface SearchPageProps {
     onClose: () => void
 }
 
+interface Companyinfo {
+    resultCnt: number,
+    resultList: CompanyData[]
+}
+
+const fetcher = (url: string) => fetch(url).then(res => res.json());
+
 export default function SearchPage({onClose}: SearchPageProps) {
     const [searchTerm, setSearchTerm] = useState('');
+    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+    const { data: companies, isLoading } = useSWR<Companyinfo>(`/api/company?size=10&companyName=${searchTerm}`, fetcher);
+    console.log(companies);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearchTerm(searchTerm);
+        }, 1000); // 1초 딜레이
+
+        return () => clearTimeout(timer);
+    }, [searchTerm]);
+
+    useEffect(() => {
+        if (debouncedSearchTerm.length > 0) {
+            mutate(`/api/company?sort=&size=20&companyName=${debouncedSearchTerm}`);
+        }
+    }, [debouncedSearchTerm]);
 
     return (
         <div className="min-h-screen flex flex-col items-center p-10">

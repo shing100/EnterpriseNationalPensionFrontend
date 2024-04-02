@@ -1,93 +1,91 @@
 "use client";
-import React from "react";
-import IndustryCard from "@/components/industryCard";
-import {DiscussionEmbed} from "disqus-react";
-import useSWR from "swr";
-import {IndustryData} from "@/types";
+import React, { useState, useEffect } from 'react';
+import formatSalaryToMillionWon, { formatNumberWithCommas } from '@/libs/utils';
+import SalaryLineChart from "@/components/salaryLineChart";
 
-interface Industryinfo {
-    resultCnt: number;
-    resultList: IndustryData[];
+interface GraphData {
+    year: number;
+    averageSalary: number;
+    medianSalary: number;
+    upperQuartileSalary: number;
 }
 
-const fetcher = (url: string) => fetch(url).then(res => res.json());
+const IndustryDetailPage = ({ params }: { params: { id: string } }) => {
+    const [industryData, setIndustryData] = useState<any>(null);
+    const [graphData, setGraphData] = useState<GraphData[]>([]);
 
-export default function IndustrySalaryStat() {
-    const { data: industryData } = useSWR<Industryinfo>("/api/salary/industry?size=1002", fetcher);
-    // Calculate top industries by highest average salary
-    const topByAverageSalary = industryData?.resultList
-        .sort((a, b) => b.industryAverageSalary - a.industryAverageSalary)
-        .slice(0, 8);
+    useEffect(() => {
+        // 여기서 industryId를 사용하여 API 호출 등의 작업을 수행하여 industryData와 graphData를 설정합니다.
+        // 예시로 다음과 같은 데이터를 사용했습니다.
+        const sampleData = {
+            companyIndustryName: '정보통신업',
+            industryAverageSalary: 5000000,
+            industryMedianSalary: 4500000,
+            industryUpperQuartileSalary: 6000000,
+            totalMemberCount: 10000,
+            newMemberCount: 1000,
+            lostMemberCount: 500,
+        };
+        setIndustryData(sampleData);
 
-    // Calculate top industries by largest number of workers
-    const topByTotalMembers = industryData?.resultList
-        .sort((a, b) => b.totalMemberCount - a.totalMemberCount)
-        .slice(0, 8);
+        const sampleGraphData: GraphData[] = [
+            { year: 2020, averageSalary: 4800000, medianSalary: 4300000, upperQuartileSalary: 5700000 },
+            { year: 2021, averageSalary: 4900000, medianSalary: 4400000, upperQuartileSalary: 5800000 },
+            { year: 2022, averageSalary: 5000000, medianSalary: 4500000, upperQuartileSalary: 6000000 },
+            { year: 2023, averageSalary: 5100000, medianSalary: 4600000, upperQuartileSalary: 6100000 },
+        ];
+        setGraphData(sampleGraphData);
+    }, [params]);
 
-    const topByNewMembers = industryData?.resultList
-        .sort((a, b) => b.newMemberCount - a.newMemberCount)
-        .slice(0, 8);
-
-    const topByLostMembers = industryData?.resultList
-        .sort((a, b) => b.lostMemberCount - a.lostMemberCount)
-        .slice(0, 8);
+    if (!industryData) {
+        return <div>Loading...</div>;
+    }
 
     return (
-        <div className="min-h-screen p-8">
-            <h2 className="text-3xl font-bold mb-8 text-center">산업 정보 ({industryData?.resultList[0].year}.{industryData?.resultList[0].month})</h2>
-            <div className="mb-8">
-                <h3 className="text-2xl font-bold mb-4 p-2">평균 연봉이 높은 산업 TOP 8</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {topByAverageSalary?.map(industry => (
-                        <IndustryCard key={industry.id} industry={industry} />
-                    ))}
+        <div className="container mx-auto my-8">
+            <div className="bg-base-100 shadow-xl hover:shadow-2xl transition-shadow duration-300 p-8">
+                <h1 className="text-3xl font-bold mb-4">{industryData.companyIndustryName}</h1>
+                <div className="stats">
+                    <div className="stat">
+                        <div className="stat-title text-md">평균 연봉</div>
+                        <div className="stat-value text-sm">{formatSalaryToMillionWon(industryData.industryAverageSalary)}</div>
+                    </div>
+                    <div className="stat">
+                        <div className="stat-title text-md">중위 연봉</div>
+                        <div className="stat-value text-sm">{formatSalaryToMillionWon(industryData.industryMedianSalary)}</div>
+                    </div>
+                    <div className="stat">
+                        <div className="stat-title text-md">상위 25%</div>
+                        <div className="stat-value text-sm">
+                            {formatSalaryToMillionWon(industryData.industryUpperQuartileSalary)}
+                        </div>
+                    </div>
+                </div>
+                <div className="stats">
+                    <div className="stat">
+                        <div className="stat-title text-sm">전체</div>
+                        <div className="stat-value text-sm">{formatNumberWithCommas(industryData.totalMemberCount)}명</div>
+                    </div>
+                    <div className="stat">
+                        <div className="stat-title text-sm">입사</div>
+                        <div className="stat-value text-sm">{formatNumberWithCommas(industryData.newMemberCount)}명</div>
+                    </div>
+                    <div className="stat">
+                        <div className="stat-title text-sm">퇴사</div>
+                        <div className="stat-value text-sm">{formatNumberWithCommas(industryData.lostMemberCount)}명</div>
+                    </div>
+                </div>
+                <div className="mt-8 px-4">
+                    <h2 className="text-2xl font-bold mb-4">연도별 연봉 추이</h2>
+                    <SalaryLineChart graphData={graphData} />
+                </div>
+                <div className="mt-8 px-4">
+                    <h2 className="text-2xl font-bold mb-4">연도별 입/퇴사 추이</h2>
+                    <SalaryLineChart graphData={graphData} />
                 </div>
             </div>
-            <hr className="my-4"></hr>
-            <div className="mb-8">
-                <h3 className="text-2xl font-bold mb-4 p-2">가장 많은 근로자를 가진 산업 TOP 8</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {topByTotalMembers?.map(industry => (
-                        <IndustryCard key={industry.id} industry={industry} />
-                    ))}
-                </div>
-            </div>
-            <div className="mb-8">
-                <h3 className="text-2xl font-bold mb-4 p-2">많이 채용한 산업 TOP 8</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {topByNewMembers?.map(industry => (
-                        <IndustryCard key={industry.id} industry={industry} />
-                    ))}
-                </div>
-            </div>
-            <div className="mb-8">
-                <h3 className="text-2xl font-bold mb-4 p-2">많이 퇴사한 산업 TOP 8</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {topByLostMembers?.map(industry => (
-                        <IndustryCard key={industry.id} industry={industry} />
-                    ))}
-                </div>
-            </div>
-            <hr></hr>
-            <h2 className="text-3xl font-bold mb-8 text-center mt-8">전체 연봉 및 통계 정보</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {industryData?.resultList.map((industry) => (
-                    <IndustryCard key={industry.companyIndustryName} industry={industry} />
-                ))}
-            </div>
-            <hr className={"my-12"}></hr>
-            <DiscussionEmbed
-                key="IndustrySalaryStat"
-                shortname='insight-jov'
-                config={
-                    {
-                        url: "http://localhost:3000/salary/industry",
-                        identifier: "industry",
-                        title: "산업별 연봉정보입니다.",
-                        language: 'ko',
-                    }
-                }
-            />
         </div>
     );
-}
+};
+
+export default IndustryDetailPage;

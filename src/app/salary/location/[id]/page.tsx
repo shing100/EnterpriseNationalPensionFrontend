@@ -1,64 +1,91 @@
 "use client";
-import type {NextPage} from "next";
-import React from "react";
-import useSWR from "swr";
-import {LocationStatData} from "@/types";
+import React, { useState, useEffect } from 'react';
+import formatSalaryToMillionWon, { formatNumberWithCommas } from '@/libs/utils';
+import SalaryLineChart from "@/components/salaryLineChart";
 
-// 예시 데이터 구조
-const locationLogoSrc = [
-    { name: '서울특별시', logo: '/서울특별시.png'},
-    { name: '경기도', logo: 'https://i.namu.wiki/i/-azxXL85alXPbFD414d8mxfLsyr5gc5NGj3gbVOWLCXD_0HwzwCPvUJwsdOTNbomTVbsUjSpNTorKr6-dkmm4Q.svg'},
-    { name: '울산광역시', logo: 'https://i.namu.wiki/i/JzN3TFx3Q1daKrO2sK0F5ZhomDc3Xc_DjIOuNdz5LvEp8wpn50UgAdxIXRQlYYEMAB4TTexGBwJXjRe6_VyUiQ.svg'},
-    { name: '부산광역시', logo: '/부산광역시.png'},
-    { name: '강원도', logo: '/강원도.png'},
-    { name: '경상남도', logo: 'https://i.namu.wiki/i/vg6QNmQ5SqCZluJkG0jiTibKqlrbGMVdijw-ts80zx90o3HLiTiXTTqCTB4CJUyvtGI343zzK3cU6eMrUyBOMg.svg'},
-    { name: '경상북도', logo: 'https://i.namu.wiki/i/OCFF29ot1Due3hSBHX3ozicGUs-7RCoxLoTOIGlDDpo98kFLasdjWsil65P0jASQs8KOaXHk0MXCMXod_i_P0w.svg'},
-    { name: '충청남도', logo: 'https://i.namu.wiki/i/NmdGLbvm2p5mv5KvKEA_R-PUD4Ts5q5KLVdjqZVaYDU7_yFt0ihtT_5dVIPAXthNxcynMAGiMpF30iJldEoj7w.svg'},
-    { name: '인천광역시', logo: 'https://i.namu.wiki/i/3-cVWCOkubfAudzMOjVXO_eS8pYu4sx3PlW8jV-kdSbi6ikrkZFfZTwI7oc0jQgOLEf75p2cWHC3g__LvIXbxQ.svg'},
-    { name: '전라남도', logo: 'https://i.namu.wiki/i/D4yPLU922vUfJN21JbmLvYlEZQk3as7MFiPdpL_1qYe1E1YjJfcGM5mVTnAtMl2uYNYJ8BRz3pZHXiEE7kYCzA.svg'},
-    { name: '충청북도', logo: 'https://i.namu.wiki/i/AVRXT9O71goo2t8xzw3N-dLwiSTkpzQRMZtq1eKxjAel3x41zud8oGhsatB0uy7FH4UPIH6bZi6uuXGrV43WJQ.svg'},
-    { name: '대구광역시', logo: 'https://i.namu.wiki/i/_JSYeSmDDh-Uzg3o2o12A0Ig5xhmqWrYFyCQ-8F2jzl8nRGmTp1NMFWxGDisBwTZf8TNlxKePnIQnFGw5_j56w.svg'},
-    { name: '대전광역시', logo: 'https://i.namu.wiki/i/lzbS2IjnPgBynSTCnvWpEmCoFzj1tb1xzlaeI-5peMK5QD6q0lXakB3rrpeEQInJJ4UHbOoRPwxgEvpp7OrSOA.svg'},
-    { name: '전북특별자치도', logo: '/전북특별자치도.png'},
-    { name: '강원특별자치도', logo: '/강원특별자치도.png'},
-    { name: '광주광역시', logo: 'https://i.namu.wiki/i/aWFdkoaJQegB71DJukdGvGZa2Ieu3Ct-k3zormF7yjNIC7j9KUQY58loIqlnK5a0jMktLcH5TI23Ni5Nbisvpg.svg'},
-    { name: '제주특별자치도', logo: 'https://i.namu.wiki/i/_Uu8Zv36rJ08Ybras2nh3fz8Sn6jJfJt8npRaAFhi46N-IuzHurx--JjCmFVbFg9_5wH-zTb3ioXu-ytLRxaUg.svg'},
-    { name: '세종특별자치시', logo: '/세종특별자치시.png'},
-    { name: '전라북도', logo: '/전라북도.jpg'},
-];
-
-interface LocationinfoWiithLogo extends LocationStatData {
-    logo?: string;
+interface GraphData {
+    year: number;
+    averageSalary: number;
+    medianSalary: number;
+    upperQuartileSalary: number;
 }
 
-interface Locationinfo {
-    resultCnt: number;
-    resultList: LocationStatData[];
-}
+const LocationDetailPage = ({ params }: { params: { id: string } }) => {
+    const [industryData, setIndustryData] = useState<any>(null);
+    const [graphData, setGraphData] = useState<GraphData[]>([]);
 
-const fetcher = (url: string) => fetch(url).then(res => res.json());
+    useEffect(() => {
+        // 여기서 industryId를 사용하여 API 호출 등의 작업을 수행하여 industryData와 graphData를 설정합니다.
+        // 예시로 다음과 같은 데이터를 사용했습니다.
+        const sampleData = {
+            companyIndustryName: '서울특별시',
+            industryAverageSalary: 5000000,
+            industryMedianSalary: 4500000,
+            industryUpperQuartileSalary: 6000000,
+            totalMemberCount: 10000,
+            newMemberCount: 1000,
+            lostMemberCount: 500,
+        };
+        setIndustryData(sampleData);
 
-const LocationSalaryDetail : NextPage = ( props ) => {
-    const { params } : any = props;
-    // 해당 지역의 5년 데이터 들고오기
-    const { data: locationStatList } = useSWR<Locationinfo>(`/api/salary/location?locationName=${params.id}&size=60`, fetcher);
+        const sampleGraphData: GraphData[] = [
+            { year: 2020, averageSalary: 4800000, medianSalary: 4300000, upperQuartileSalary: 5700000 },
+            { year: 2021, averageSalary: 4900000, medianSalary: 4400000, upperQuartileSalary: 5800000 },
+            { year: 2022, averageSalary: 5000000, medianSalary: 4500000, upperQuartileSalary: 6000000 },
+            { year: 2023, averageSalary: 5100000, medianSalary: 4600000, upperQuartileSalary: 6100000 },
+        ];
+        setGraphData(sampleGraphData);
+    }, [params]);
 
-    const enrichedLocationStatList: LocationinfoWiithLogo[] = locationStatList?.resultList.map(location => {
-        // locationName에 맞는 로고 찾기
-        const logo = locationLogoSrc.find(logoSrc => logoSrc.name === location.locationName)?.logo;
-        // 새로운 객체 반환
-        return { ...location, logo };
-    }) ?? [];
+    if (!industryData) {
+        return <div>Loading...</div>;
+    }
 
-    // @ts-ignore
     return (
-        <div className="min-h-screen p-8">
-            <h2 className="text-3xl font-bold mb-8 text-center">지역 연봉 및 통계 정보</h2>
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-
+        <div className="container mx-auto my-8">
+            <div className="bg-base-100 shadow-xl hover:shadow-2xl transition-shadow duration-300 p-8">
+                <h1 className="text-3xl font-bold mb-4">{industryData.companyIndustryName}</h1>
+                <div className="stats">
+                    <div className="stat">
+                        <div className="stat-title text-md">평균 연봉</div>
+                        <div className="stat-value text-sm">{formatSalaryToMillionWon(industryData.industryAverageSalary)}</div>
+                    </div>
+                    <div className="stat">
+                        <div className="stat-title text-md">중위 연봉</div>
+                        <div className="stat-value text-sm">{formatSalaryToMillionWon(industryData.industryMedianSalary)}</div>
+                    </div>
+                    <div className="stat">
+                        <div className="stat-title text-md">상위 25%</div>
+                        <div className="stat-value text-sm">
+                            {formatSalaryToMillionWon(industryData.industryUpperQuartileSalary)}
+                        </div>
+                    </div>
+                </div>
+                <div className="stats">
+                    <div className="stat">
+                        <div className="stat-title text-sm">전체</div>
+                        <div className="stat-value text-sm">{formatNumberWithCommas(industryData.totalMemberCount)}명</div>
+                    </div>
+                    <div className="stat">
+                        <div className="stat-title text-sm">입사</div>
+                        <div className="stat-value text-sm">{formatNumberWithCommas(industryData.newMemberCount)}명</div>
+                    </div>
+                    <div className="stat">
+                        <div className="stat-title text-sm">퇴사</div>
+                        <div className="stat-value text-sm">{formatNumberWithCommas(industryData.lostMemberCount)}명</div>
+                    </div>
+                </div>
+                <div className="mt-8 px-4">
+                    <h2 className="text-2xl font-bold mb-4">연도별 연봉 추이</h2>
+                    <SalaryLineChart graphData={graphData} />
+                </div>
+                <div className="mt-8 px-4">
+                    <h2 className="text-2xl font-bold mb-4">연도별 입/퇴사 추이</h2>
+                    <SalaryLineChart graphData={graphData} />
+                </div>
             </div>
         </div>
     );
-}
+};
 
-export default LocationSalaryDetail;
+export default LocationDetailPage;
