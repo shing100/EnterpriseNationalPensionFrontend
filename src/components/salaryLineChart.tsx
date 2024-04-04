@@ -10,7 +10,7 @@ import {
 } from "recharts";
 
 
-const salaryLineChart = ({ graphData }) => {
+const salaryLineChart = ({ graphData } : any) => {
     return (
         <ResponsiveContainer width="100%" height={400}>
             <LineChart data={graphData} margin={{ top: 20, right: 30, bottom: 20, left: 30 }}>
