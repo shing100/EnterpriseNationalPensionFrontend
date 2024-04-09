@@ -1,16 +1,27 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect } from 'react';
 import formatSalaryToMillionWon, { formatNumberWithCommas } from '@/libs/utils';
 import SalaryLineChart from "@/components/salaryLineChart";
+import EmployeeLineChart from "@/components/employeeLineChart";
 
 interface GraphData {
     year: number;
-    averageSalary: number;
-    medianSalary: number;
-    upperQuartileSalary: number;
+    averageSalary?: number;
+    medianSalary?: number;
+    upperQuartileSalary?: number;
+    totalMemberCount?: number;
+    newMemberCount?: number;
+    lostMemberCount?: number;
 }
 
-const IndustryDetailPage = ({ params }: { params: { id: string } }) => {
+const TABS = {
+    TOTAL: 'total',
+    NEW: 'new',
+    LOST: 'lost',
+};
+
+const LocationDetailPage = ({ params }: { params: { id: string } }) => {
+    const [selectedTab, setSelectedTab] = useState(TABS.TOTAL);
     const [industryData, setIndustryData] = useState<any>(null);
     const [graphData, setGraphData] = useState<GraphData[]>([]);
 
@@ -18,7 +29,7 @@ const IndustryDetailPage = ({ params }: { params: { id: string } }) => {
         // 여기서 industryId를 사용하여 API 호출 등의 작업을 수행하여 industryData와 graphData를 설정합니다.
         // 예시로 다음과 같은 데이터를 사용했습니다.
         const sampleData = {
-            companyIndustryName: '정보통신업',
+            companyIndustryName: '서울특별시',
             industryAverageSalary: 5000000,
             industryMedianSalary: 4500000,
             industryUpperQuartileSalary: 6000000,
@@ -28,14 +39,28 @@ const IndustryDetailPage = ({ params }: { params: { id: string } }) => {
         };
         setIndustryData(sampleData);
 
+        // 연도별 데이터 설정
         const sampleGraphData: GraphData[] = [
-            { year: 2020, averageSalary: 4800000, medianSalary: 4300000, upperQuartileSalary: 5700000 },
-            { year: 2021, averageSalary: 4900000, medianSalary: 4400000, upperQuartileSalary: 5800000 },
-            { year: 2022, averageSalary: 5000000, medianSalary: 4500000, upperQuartileSalary: 6000000 },
-            { year: 2023, averageSalary: 5100000, medianSalary: 4600000, upperQuartileSalary: 6100000 },
+            { year: 2020, totalMemberCount: 10000, newMemberCount: 1000, lostMemberCount: 500,  averageSalary: 4800000, medianSalary: 4300000, upperQuartileSalary: 5700000 },
+            { year: 2021, totalMemberCount: 10200, newMemberCount: 1200, lostMemberCount: 1000, averageSalary: 4900000, medianSalary: 4400000, upperQuartileSalary: 5800000 },
+            { year: 2022, totalMemberCount: 10500, newMemberCount: 1500, lostMemberCount: 1200, averageSalary: 4900000, medianSalary: 4400000, upperQuartileSalary: 5800000 },
+            { year: 2023, totalMemberCount: 11000, newMemberCount: 2000, lostMemberCount: 1500, averageSalary: 4900000, medianSalary: 4400000, upperQuartileSalary: 5800000 },
         ];
         setGraphData(sampleGraphData);
     }, [params]);
+
+    const renderGraph = () => {
+        switch (selectedTab) {
+            case TABS.TOTAL:
+                return <EmployeeLineChart graphData={graphData.map(({ year, totalMemberCount }) => ({ year, value: totalMemberCount, tag: "전체" }))} />;
+            case TABS.NEW:
+                return <EmployeeLineChart graphData={graphData.map(({ year, newMemberCount }) => ({ year, value: newMemberCount, tag: "입사" }))} />;
+            case TABS.LOST:
+                return <EmployeeLineChart graphData={graphData.map(({ year, lostMemberCount }) => ({ year, value: lostMemberCount, tag:"퇴사" }))} />;
+            default:
+                return null;
+        }
+    };
 
     if (!industryData) {
         return <div>Loading...</div>;
@@ -81,11 +106,20 @@ const IndustryDetailPage = ({ params }: { params: { id: string } }) => {
                 </div>
                 <div className="mt-8 px-4">
                     <h2 className="text-2xl font-bold mb-4">연도별 입/퇴사 추이</h2>
-                    <SalaryLineChart graphData={graphData} />
+                    <div className="flex justify-end">
+                        <div className="tabs">
+                            <a className={`text-lg tab ${selectedTab === TABS.TOTAL ? 'tab-active' : ''}`} onClick={() => setSelectedTab(TABS.TOTAL)}>전체</a>
+                            <a className={`text-lg tab ${selectedTab === TABS.NEW ? 'tab-active' : ''}`} onClick={() => setSelectedTab(TABS.NEW)}>입사</a>
+                            <a className={`text-lg tab ${selectedTab === TABS.LOST ? 'tab-active' : ''}`} onClick={() => setSelectedTab(TABS.LOST)}>퇴사</a>
+                        </div>
+                    </div>
+                    <div className="mt-8">
+                        {renderGraph()}
+                    </div>
                 </div>
             </div>
         </div>
     );
 };
 
-export default IndustryDetailPage;
+export default LocationDetailPage;
