@@ -69,7 +69,7 @@ const LocationDetailPage = ({ params }: { params: { id: string } }) => {
                     <img src={enrichedLocationStatList[0].logo} alt="Logo" className="w-32 h-28 rounded ml-4"/>
                     <h1 className="text-3xl font-bold ml-2 pl-3">{data?.resultList[0].locationName}</h1>
                     <div className="ml-auto">
-                        <div className="w-48">
+                        <div className="w-20 sm:w-36 lg:w-48">
                             <select
                                 value={size}
                                 onChange={handleSizeChange}
@@ -129,7 +129,7 @@ const LocationDetailPage = ({ params }: { params: { id: string } }) => {
                             <a className={`text-lg tab ${selectedTab === TABS.LOST ? 'tab-active' : ''}`} onClick={() => setSelectedTab(TABS.LOST)}>퇴사</a>
                         </div>
                     </div>
-                    <div className="mt-8">
+                    <div className="mt-1">
                         {renderGraph()}
                     </div>
                 </div>
