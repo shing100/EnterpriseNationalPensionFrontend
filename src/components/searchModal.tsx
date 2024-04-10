@@ -31,7 +31,7 @@ export default function SearchPage({onClose}: SearchPageProps) {
     const [searchTerm, setSearchTerm] = useState('');
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
     const { data: randomCompany, isLoading: companyLoading } = useSWR<MonthlyStatResponse>(`/api/search`, fetcher);
-    const { data: companies, isLoading } = useSWR<Companyinfo>(`/api/company?size=10&companyName=${searchTerm}`, fetcher);
+    const { data: companies, isLoading } = useSWR<Companyinfo>(`/api/company?size=10&sort=totalMemberCount&companyName=${searchTerm}`, fetcher);
     console.log(companies);
 
     useEffect(() => {
