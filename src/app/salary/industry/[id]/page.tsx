@@ -29,7 +29,7 @@ const LocationDetailPage = ({ params }: { params: { id: string } }) => {
         // 여기서 industryId를 사용하여 API 호출 등의 작업을 수행하여 industryData와 graphData를 설정합니다.
         // 예시로 다음과 같은 데이터를 사용했습니다.
         const sampleData = {
-            companyIndustryName: '서울특별시',
+            companyIndustryName: '담배 제조업',
             industryAverageSalary: 5000000,
             industryMedianSalary: 4500000,
             industryUpperQuartileSalary: 6000000,
@@ -69,7 +69,7 @@ const LocationDetailPage = ({ params }: { params: { id: string } }) => {
     return (
         <div className="container mx-auto my-8">
             <div className="bg-base-100 shadow-xl hover:shadow-2xl transition-shadow duration-300 p-8">
-                <h1 className="text-3xl font-bold mb-4">{industryData.companyIndustryName}</h1>
+                <h1 className="text-3xl font-bold m-4">{industryData.companyIndustryName}</h1>
                 <div className="stats">
                     <div className="stat">
                         <div className="stat-title text-md">평균 연봉</div>

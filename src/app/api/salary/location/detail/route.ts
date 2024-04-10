@@ -1,10 +1,12 @@
-import {getIndustryStatList} from "@/libs/server/client";
+import {getLocationDetail} from "@/libs/server/client";
 import {NextRequest, NextResponse} from "next/server";
 
 export const GET = async (req : NextRequest, res : NextResponse) => {
     const searchParams = new URLSearchParams(req.url.split("?")[1]);
     const sort = searchParams.get('sort') || "totalMemberCount";
     const size = searchParams.get('size') || "20";
-    const result = await getIndustryStatList(size, sort);
+    const locationName = searchParams.get('locationName') || "";
+    const result = await getLocationDetail(locationName, size, sort);
     return NextResponse.json(result);
 }
+

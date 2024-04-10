@@ -14,11 +14,23 @@ interface Companyinfo {
     resultList: CompanyData[]
 }
 
+interface MonthlyStatResponse {
+    ok: boolean;
+    data: {
+        insightRecomCompany: {
+            resultList: CompanyData[];
+            resultCnt: number;
+        },
+    };
+    errors: string[];
+}
+
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 export default function SearchPage({onClose}: SearchPageProps) {
     const [searchTerm, setSearchTerm] = useState('');
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+    const { data: randomCompany, isLoading: companyLoading } = useSWR<MonthlyStatResponse>(`/api/search`, fetcher);
     const { data: companies, isLoading } = useSWR<Companyinfo>(`/api/company?size=10&companyName=${searchTerm}`, fetcher);
     console.log(companies);
 
@@ -86,14 +98,8 @@ export default function SearchPage({onClose}: SearchPageProps) {
                         <h3 className="text-lg font-semibold mb-2">랜덤 기업</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-2 gap-4">
                             {/* 여러 기업 정보 카드 반복 */}
-                            {Array.from({ length: 5 }).map((_, index) => (
-                                CompanyCard({company: {
-                                    id: index,
-                                    companyName: "기업명",
-                                    companyIndustryName: "산업명",
-                                    totalMemberCount: 100,
-                                    companyRoadNameAddress: "도로명 주소"
-                                }})
+                            {randomCompany && randomCompany.data.insightRecomCompany.resultList.map((company) => (
+                                CompanyCard({company})
                             ))}
                         </div>
                     </div>
@@ -149,7 +155,7 @@ const CompanyCard = ({company}: {company: CompanyData}) => {
             </figure>
             <div className="my-auto">
                 <h2 className="text-md font-bold">{company.companyName}</h2>
-                <p>{company.companyIndustryName} | {company.companyRoadNameAddress} | {company.totalMemberCount}명</p>
+                <p>{company.companyIndustryName} | {company.companyRoadNameAddress.split(" ")[0]} {company.companyRoadNameAddress.split(" ")[1]} | {company.totalMemberCount}명</p>
             </div>
         </div>
         </Link>

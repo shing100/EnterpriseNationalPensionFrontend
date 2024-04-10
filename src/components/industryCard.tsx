@@ -1,10 +1,13 @@
 import formatSalaryToMillionWon, {formatNumberWithCommas} from "@/libs/utils";
 
 const IndustryCard = ({industry} : any) => {
+    if (industry.companyIndustryName === '') {
+        industry.companyIndustryName = '산업명 없음';
+    }
     return (
         <div className="bg-base-100 shadow-xl hover:shadow-2xl transition-shadow duration-300">
             <div className="items-center text-center">
-                <h3 className="text-xl font-bold mb-2 mt-6">{industry.companyIndustryName}</h3>
+                <h3 className="text-xl font-bold mb-2 mt-6 pt-4">{industry.companyIndustryName}</h3>
                 <div className="py-4">
                     <div className="stats">
                         <div className="stat">

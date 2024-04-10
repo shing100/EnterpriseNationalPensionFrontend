@@ -17,7 +17,7 @@ const fetcher = (url: string) => fetch(url).then(res => res.json());
 export default function CompanyInfoView() {
     const { register, handleSubmit, formState: { errors }, watch } = useForm();
     const companyName = watch("companyName");
-    const { data: companies, isLoading } = useSWR<Companyinfo>(`/api/company?sort=&size=20&companyName=${companyName}`, fetcher);
+    const { data: companies, isLoading } = useSWR<Companyinfo>(`/api/company?sort=totalMemberCount&size=20&companyName=${companyName}`, fetcher);
 
     // 입력값 디바운스를 위한 상태
     const [debouncedCompanyName, setDebouncedCompanyName] = useState(companyName);

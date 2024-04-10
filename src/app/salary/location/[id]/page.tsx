@@ -1,18 +1,11 @@
 "use client";
 import React, {useState, useEffect } from 'react';
-import formatSalaryToMillionWon, { formatNumberWithCommas } from '@/libs/utils';
+import formatSalaryToMillionWon, {formatNumberWithCommas, locationLogoSrc} from '@/libs/utils';
 import SalaryLineChart from "@/components/salaryLineChart";
 import EmployeeLineChart from "@/components/employeeLineChart";
-
-interface GraphData {
-    year: number;
-    averageSalary?: number;
-    medianSalary?: number;
-    upperQuartileSalary?: number;
-    totalMemberCount?: number;
-    newMemberCount?: number;
-    lostMemberCount?: number;
-}
+import {LocationStatData} from "@/types";
+import useSWR from "swr";
+import {id} from "postcss-selector-parser";
 
 const TABS = {
     TOTAL: 'total',
@@ -20,92 +13,115 @@ const TABS = {
     LOST: 'lost',
 };
 
+interface LocationinfoWiithLogo extends LocationStatData {
+    logo?: string;
+}
+
+interface Locationinfo {
+    resultCnt: number;
+    resultList: LocationStatData[];
+}
+
+const fetcher = (url: string) => fetch(url).then(res => res.json());
+
 const LocationDetailPage = ({ params }: { params: { id: string } }) => {
     const [selectedTab, setSelectedTab] = useState(TABS.TOTAL);
-    const [industryData, setIndustryData] = useState<any>(null);
-    const [graphData, setGraphData] = useState<GraphData[]>([]);
+    const [size, setSize] = useState(3);
+    const { data, isLoading } = useSWR<Locationinfo>(`/api/salary/location/detail?locationName=${params.id}&sort=date.keyword&size=${size * 12}`, fetcher);
 
-    useEffect(() => {
-        // 여기서 industryId를 사용하여 API 호출 등의 작업을 수행하여 industryData와 graphData를 설정합니다.
-        // 예시로 다음과 같은 데이터를 사용했습니다.
-        const sampleData = {
-            companyIndustryName: '서울특별시',
-            industryAverageSalary: 5000000,
-            industryMedianSalary: 4500000,
-            industryUpperQuartileSalary: 6000000,
-            totalMemberCount: 10000,
-            newMemberCount: 1000,
-            lostMemberCount: 500,
-        };
-        setIndustryData(sampleData);
+    const enrichedLocationStatList: LocationinfoWiithLogo[] = data?.resultList.map(location => {
+        // locationName에 맞는 로고 찾기
+        const logo = locationLogoSrc.find(logoSrc => logoSrc.name === location.locationName)?.logo;
+        // 새로운 객체 반환
+        return { ...location, logo };
+    }) ?? [];
 
-        // 연도별 데이터 설정
-        const sampleGraphData: GraphData[] = [
-            { year: 2020, totalMemberCount: 10000, newMemberCount: 1000, lostMemberCount: 500,  averageSalary: 4800000, medianSalary: 4300000, upperQuartileSalary: 5700000 },
-            { year: 2021, totalMemberCount: 10200, newMemberCount: 1200, lostMemberCount: 1000, averageSalary: 4900000, medianSalary: 4400000, upperQuartileSalary: 5800000 },
-            { year: 2022, totalMemberCount: 10500, newMemberCount: 1500, lostMemberCount: 1200, averageSalary: 4900000, medianSalary: 4400000, upperQuartileSalary: 5800000 },
-            { year: 2023, totalMemberCount: 11000, newMemberCount: 2000, lostMemberCount: 1500, averageSalary: 4900000, medianSalary: 4400000, upperQuartileSalary: 5800000 },
-        ];
-        setGraphData(sampleGraphData);
-    }, [params]);
+    const reversedData = [...(data?.resultList || [])].reverse(); // 데이터를 복사하고 역순으로 정렬
+
+    // 셀렉트 박스를 통해 `size` 값을 변경할 수 있도록 UI에 추가
+    const handleSizeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setSize(Number(event.target.value));
+    };
 
     const renderGraph = () => {
         switch (selectedTab) {
             case TABS.TOTAL:
-                return <EmployeeLineChart graphData={graphData.map(({ year, totalMemberCount }) => ({ year, value: totalMemberCount, tag: "전체" }))} />;
+                return <EmployeeLineChart graphData={reversedData.map(({ date, totalMemberCount }) => ({ date, value: totalMemberCount, tag: "전체" }))} />;
             case TABS.NEW:
-                return <EmployeeLineChart graphData={graphData.map(({ year, newMemberCount }) => ({ year, value: newMemberCount, tag: "입사" }))} />;
+                return <EmployeeLineChart graphData={reversedData.map(({ date, newMemberCount }) => ({ date, value: newMemberCount, tag: "입사" }))} />;
             case TABS.LOST:
-                return <EmployeeLineChart graphData={graphData.map(({ year, lostMemberCount }) => ({ year, value: lostMemberCount, tag:"퇴사" }))} />;
+                return <EmployeeLineChart graphData={reversedData.map(({ date, lostMemberCount }) => ({ date, value: lostMemberCount, tag: "퇴사" }))} />;
             default:
                 return null;
         }
     };
 
-    if (!industryData) {
-        return <div>Loading...</div>;
+    if (isLoading) {
+        return <div className="flex items-center justify-center h-screen">
+            <div className="text-xl font-bold text-center">Loading...</div>
+        </div>;
     }
 
     return (
         <div className="container mx-auto my-8">
             <div className="bg-base-100 shadow-xl hover:shadow-2xl transition-shadow duration-300 p-8">
-                <h1 className="text-3xl font-bold mb-4">{industryData.companyIndustryName}</h1>
+                <div className="flex items-center">
+                    <img src={enrichedLocationStatList[0].logo} alt="Logo" className="w-32 h-28 rounded ml-4"/>
+                    <h1 className="text-3xl font-bold ml-2 pl-3">{data?.resultList[0].locationName}</h1>
+                    <div className="ml-auto">
+                        <div className="w-48">
+                            <select
+                                value={size}
+                                onChange={handleSizeChange}
+                                className="form-select appearance-none block w-full px-3 py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding bg-no-repeat border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                            >
+                                {[...Array(9).keys()].map((year: number) => (
+                                    <option key={year + 1} value={year + 1}>{year + 1}년</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+                </div>
                 <div className="stats">
                     <div className="stat">
                         <div className="stat-title text-md">평균 연봉</div>
-                        <div className="stat-value text-sm">{formatSalaryToMillionWon(industryData.industryAverageSalary)}</div>
+                        <div className="stat-value text-sm">{formatSalaryToMillionWon(data?.resultList[0].locationAverageSalary ?? 0)}</div>
                     </div>
                     <div className="stat">
                         <div className="stat-title text-md">중위 연봉</div>
-                        <div className="stat-value text-sm">{formatSalaryToMillionWon(industryData.industryMedianSalary)}</div>
+                        <div className="stat-value text-sm">{formatSalaryToMillionWon(data?.resultList[0].locationMedianSalary ?? 0)}</div>
                     </div>
                     <div className="stat">
                         <div className="stat-title text-md">상위 25%</div>
                         <div className="stat-value text-sm">
-                            {formatSalaryToMillionWon(industryData.industryUpperQuartileSalary)}
+                            {formatSalaryToMillionWon(data?.resultList[0].locationUpperQuartileSalary ?? 0)}
                         </div>
                     </div>
                 </div>
                 <div className="stats">
                     <div className="stat">
                         <div className="stat-title text-sm">전체</div>
-                        <div className="stat-value text-sm">{formatNumberWithCommas(industryData.totalMemberCount)}명</div>
+                        <div className="stat-value text-sm">{formatNumberWithCommas(data?.resultList[0].totalMemberCount ?? 0)}명</div>
                     </div>
                     <div className="stat">
                         <div className="stat-title text-sm">입사</div>
-                        <div className="stat-value text-sm">{formatNumberWithCommas(industryData.newMemberCount)}명</div>
+                        <div className="stat-value text-sm">{formatNumberWithCommas(data?.resultList[0].newMemberCount ?? 0)}명</div>
                     </div>
                     <div className="stat">
                         <div className="stat-title text-sm">퇴사</div>
-                        <div className="stat-value text-sm">{formatNumberWithCommas(industryData.lostMemberCount)}명</div>
+                        <div className="stat-value text-sm">{formatNumberWithCommas(data?.resultList[0].lostMemberCount ?? 0)}명</div>
+                    </div>
+                    <div className="stat">
+                        <div className="stat-title text-sm">회사수</div>
+                        <div className="stat-value text-sm">{formatNumberWithCommas(data?.resultList[0].locationCompanyCount ?? 0)}</div>
                     </div>
                 </div>
                 <div className="mt-8 px-4">
-                    <h2 className="text-2xl font-bold mb-4">연도별 연봉 추이</h2>
-                    <SalaryLineChart graphData={graphData} />
+                    <h2 className="text-2xl font-bold mb-4">월별 연봉 추이</h2>
+                    <SalaryLineChart graphData={reversedData} />
                 </div>
                 <div className="mt-8 px-4">
-                    <h2 className="text-2xl font-bold mb-4">연도별 입/퇴사 추이</h2>
+                    <h2 className="text-2xl font-bold mb-4">월별 입/퇴사 추이</h2>
                     <div className="flex justify-end">
                         <div className="tabs">
                             <a className={`text-lg tab ${selectedTab === TABS.TOTAL ? 'tab-active' : ''}`} onClick={() => setSelectedTab(TABS.TOTAL)}>전체</a>

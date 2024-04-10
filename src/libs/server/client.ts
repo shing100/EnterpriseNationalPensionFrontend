@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const API_BASE_URL = 'http://128.199.127.167:9000';
+//const API_BASE_URL = 'http://localhost:8080';
 
 const instance = axios.create({
     baseURL: API_BASE_URL,
@@ -34,20 +35,13 @@ function getMonthlyStat() {
     return instance.get(`/insight/monthly`).then((response) => response.data);
 }
 
-export function getLocationStatList(locationName: string | null, size: string = "20", sort: string) {
+export function getLocationStatList(locationName: string, size: string = "20", sort: string) {
     const currentDate = new Date();
     currentDate.setMonth(currentDate.getMonth() - 2);
     const year = currentDate.getFullYear();
     const month = String(currentDate.getMonth() + 1).padStart(2, '0');
     const formattedDate = `${year}${month}`;
-    const params = new URLSearchParams();
-    if (locationName !== null) {
-        params.append('location', locationName);
-    }
-    params.append('date', formattedDate);
-    params.append('size', size.toString());
-    params.append('sort', sort);
-
+    const params = new URLSearchParams({location: locationName, size: size.toString(), sort: sort, date: formattedDate});;
     return instance.post(`/insight/location/list?${params.toString()}`).then((response) => response.data);
 }
 
@@ -58,6 +52,16 @@ export function getIndustryStatList(size: string = "20", sort: string) {
     const month = String(currentDate.getMonth() + 1).padStart(2, '0');
     const formattedDate = `${year}${month}`;
     const params = new URLSearchParams({date: formattedDate, size: size.toString(), sort: sort});
+    return instance.post(`/insight/industry/list?${params.toString()}`).then((response) => response.data);
+}
+
+export function getLocationDetail(locationName: string, size: string = "20", sort: string) {
+    const params = new URLSearchParams({location: locationName, size: size.toString(), sort: sort});;
+    return instance.post(`/insight/location/list?${params.toString()}`).then((response) => response.data);
+}
+
+export function getIndustryDetail(industryCode: string, size: string = "20", sort: string) {
+    const params = new URLSearchParams({industry: industryCode, size: size.toString(), sort: sort});;
     return instance.post(`/insight/industry/list?${params.toString()}`).then((response) => response.data);
 }
 
@@ -123,6 +127,34 @@ export async function getTodayStat() {
             insightRecomCompany,
             insightTopContributions,
             monthlyStat,
+        },
+    };
+}
+
+
+export async function getSearchDefault() {
+    const currentDate = new Date();
+    currentDate.setMonth(currentDate.getMonth() - 2);
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const formattedDate = `${year}${month}`;
+
+    let insightRecomCompany
+    let errors = [];
+
+    // Insight Recom Company
+    try {
+        insightRecomCompany = await getInsightRecomCompany(formattedDate, 'desc', 4, 100);
+    } catch (error) {
+        console.error("Insight Recom Company fetch error:", error);
+        errors.push("Failed to fetch recommended companies.");
+    }
+
+    return {
+        ok: errors.length === 0,
+        errors: errors.length > 0 ? errors : undefined,
+        data: {
+            insightRecomCompany,
         },
     };
 }

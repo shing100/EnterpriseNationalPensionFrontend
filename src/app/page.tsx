@@ -7,6 +7,7 @@ import formatSalaryToMillionWon, {formatNumberWithCommas} from "@/libs/utils";
 import axios from "axios";
 import useSWR from "swr";
 import {CompanyData} from "@/types";
+import Link from "next/link";
 
 interface IconProps {
     className?: string;
@@ -70,7 +71,9 @@ export default function Home() {
                         <h1 className={"text-3xl font-bold mb-4"}>오늘의 기업</h1>
                         <div className="grid gap-x-10 gap-y-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
                             {data?.data && data?.data?.insightRecomCompany.resultList.map((company: any) => (
-                                <Card key={company.id} {...company} />
+                                <Link href={`/company/${company.id}`} key={company.id}>
+                                    <Card key={company.id} {...company} />
+                                </Link>
                             ))}
                         </div>
                     </div>
