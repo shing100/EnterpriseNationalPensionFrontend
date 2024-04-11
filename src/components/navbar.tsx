@@ -30,6 +30,7 @@ export default function Navbar() {
                                 <li><Link href={"/salary/location"}>지역별</Link></li>
                                 <li><Link href={"/salary/industry"}>산업별</Link></li>
                                 <li><Link href={"/salary/receive"}>실수령액</Link></li>
+                                <li><Link target={"_blank"} href={"https://ai-lab.saramin.co.kr/salary-prototype/index"}>직무별 연봉정보</Link></li>
                             </ul>
                         </details>
                     </li>

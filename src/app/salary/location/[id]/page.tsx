@@ -1,11 +1,12 @@
 "use client";
 import React, {useState, useEffect } from 'react';
 import formatSalaryToMillionWon, {formatNumberWithCommas, locationLogoSrc} from '@/libs/utils';
-import SalaryLineChart from "@/components/salaryLineChart";
+import SalaryLineChart from "@/components/salaryLocationLineChart";
 import EmployeeLineChart from "@/components/employeeLineChart";
 import {LocationStatData} from "@/types";
 import useSWR from "swr";
 import {id} from "postcss-selector-parser";
+import SalaryLocationLineChart from "@/components/salaryLocationLineChart";
 
 const TABS = {
     TOTAL: 'total',
@@ -111,14 +112,14 @@ const LocationDetailPage = ({ params }: { params: { id: string } }) => {
                         <div className="stat-title text-sm">퇴사</div>
                         <div className="stat-value text-sm">{formatNumberWithCommas(data?.resultList[0].lostMemberCount ?? 0)}명</div>
                     </div>
-                    <div className="stat">
+                    <div className="hidden sm:display sm:stat">
                         <div className="stat-title text-sm">회사수</div>
                         <div className="stat-value text-sm">{formatNumberWithCommas(data?.resultList[0].locationCompanyCount ?? 0)}</div>
                     </div>
                 </div>
                 <div className="mt-8 px-4">
                     <h2 className="text-2xl font-bold mb-4">월별 연봉 추이</h2>
-                    <SalaryLineChart graphData={reversedData} />
+                    <SalaryLocationLineChart graphData={reversedData} />
                 </div>
                 <div className="mt-8 px-4">
                     <h2 className="text-2xl font-bold mb-4">월별 입/퇴사 추이</h2>

@@ -11,7 +11,8 @@ export interface IndustryData {
     newMemberCount: number;
     lostMemberCount: number;
     industryCompanyCount: number;
-    totalMemberCount: number;
+    totalMemberCount: number
+    companyIndustryCode: string;
 }
 
 

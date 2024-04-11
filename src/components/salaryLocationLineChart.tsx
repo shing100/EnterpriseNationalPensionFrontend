@@ -10,12 +10,12 @@ import {
 } from "recharts";
 
 
-const salaryLineChart = ({ graphData } : any) => {
+const salaryLocationLineChart = ({ graphData } : any) => {
     return (
         <ResponsiveContainer width="100%" height={400}>
             <LineChart data={graphData} margin={{ top: 20, right: 5, bottom: 20, left: 5 }}>
                 <XAxis dataKey="date" tick={{ fontSize: 14 }} tickFormatter={(value) => `${value}`} />
-                <YAxis type="number" domain={[20000000, 70000000]} tickFormatter={(value) => `${Math.floor(value / 10000)}만원`} tick={{ fontSize: 14 }} />
+                <YAxis type="number" domain={[20000000, 52000000]} tickFormatter={(value) => `${Math.floor(value / 10000)}만원`} tick={{ fontSize: 14 }} />
                 <CartesianGrid strokeDasharray="3 3" />
                 <Tooltip labelFormatter={value => `${value}년도`} formatter={(value : number) => `${Math.floor(value / 10000)}만원`}  />
                 <Legend verticalAlign="top" height={36} />
@@ -28,4 +28,4 @@ const salaryLineChart = ({ graphData } : any) => {
 };
 
 
-export default salaryLineChart;
+export default salaryLocationLineChart;

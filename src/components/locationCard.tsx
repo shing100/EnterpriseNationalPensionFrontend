@@ -42,7 +42,7 @@ export default function LocationCard(location : Location) {
                             <div className="stat-title lg:text-lg text-sm">퇴사</div>
                             <div className="stat-value text-sm">{formatNumberWithCommas(location.lostMemberCount)}</div>
                         </div>
-                        <div className="stat">
+                        <div className="hidden sm:display sm:stat">
                             <div className="stat-title lg:text-lg text-sm">기업 수</div>
                             <div className="stat-value text-sm">{formatNumberWithCommas(location.locationCompanyCount)}</div>
                         </div>

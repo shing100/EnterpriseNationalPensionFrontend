@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import formatSalaryToMillionWon, { formatNumberWithCommas } from '@/libs/utils';
-import SalaryLineChart from "@/components/salaryLineChart";
+import SalaryLineChart from "@/components/salaryLocationLineChart";
 
 interface GraphData {
     year: number;

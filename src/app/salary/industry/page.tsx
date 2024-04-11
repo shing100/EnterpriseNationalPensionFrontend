@@ -15,6 +15,7 @@ const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 export default function IndustrySalaryStat() {
     const { data: industryData } = useSWR<Industryinfo>("/api/salary/industry?size=1002", fetcher);
+
     // Calculate top industries by highest average salary
     const topByAverageSalary = industryData?.resultList
         .sort((a, b) => b.industryAverageSalary - a.industryAverageSalary)
@@ -40,7 +41,7 @@ export default function IndustrySalaryStat() {
                 <h3 className="text-2xl font-bold mb-4 p-2">평균 연봉이 높은 산업 TOP 8</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {topByAverageSalary?.map(industry => (
-                        <Link href={`/salary/industry/${industry.companyIndustryName}`} key={industry.id}>
+                        <Link href={`/salary/industry/${industry.companyIndustryCode}`} key={industry.id}>
                             <IndustryCard key={industry.id} industry={industry} />
                         </Link>
                     ))}
@@ -51,7 +52,7 @@ export default function IndustrySalaryStat() {
                 <h3 className="text-2xl font-bold mb-4 p-2">가장 많은 근로자를 가진 산업 TOP 8</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {topByTotalMembers?.map(industry => (
-                        <Link href={`/salary/industry/${industry.companyIndustryName}`} key={industry.id}>
+                        <Link href={`/salary/industry/${industry.companyIndustryCode}`} key={industry.id}>
                             <IndustryCard key={industry.id} industry={industry} />
                         </Link>
                     ))}
@@ -61,7 +62,7 @@ export default function IndustrySalaryStat() {
                 <h3 className="text-2xl font-bold mb-4 p-2">많이 채용한 산업 TOP 8</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {topByNewMembers?.map(industry => (
-                        <Link href={`/salary/industry/${industry.companyIndustryName}`} key={industry.id}>
+                        <Link href={`/salary/industry/${industry.companyIndustryCode}`} key={industry.id}>
                             <IndustryCard key={industry.id} industry={industry} />
                         </Link>
                     ))}
@@ -71,7 +72,7 @@ export default function IndustrySalaryStat() {
                 <h3 className="text-2xl font-bold mb-4 p-2">많이 퇴사한 산업 TOP 8</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {topByLostMembers?.map(industry => (
-                        <Link href={`/salary/industry/${industry.companyIndustryName}`} key={industry.id}>
+                        <Link href={`/salary/industry/${industry.companyIndustryCode}`} key={industry.id}>
                             <IndustryCard key={industry.id} industry={industry} />
                         </Link>
                     ))}
@@ -81,7 +82,7 @@ export default function IndustrySalaryStat() {
             <h2 className="text-3xl font-bold mb-8 text-center mt-8">전체 연봉 및 통계 정보</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {industryData?.resultList.map((industry) => (
-                    <Link href={`/salary/industry/${industry.companyIndustryName}`} key={industry.id}>
+                    <Link href={`/salary/industry/${industry.companyIndustryCode}`} key={industry.id}>
                         <IndustryCard key={industry.companyIndustryName} industry={industry} />
                     </Link>
                 ))}
