@@ -53,7 +53,7 @@ export default function CompanyInfoView() {
 
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
                     {companies?.resultList.map((company, index) => (
-                        <Link href={`/company/${company.id}`} key={index}>
+                        <Link href={`/company/${company.companyName}`} key={index}>
                             <CompanyCard key={index} {...company} />
                         </Link>
                     ))}

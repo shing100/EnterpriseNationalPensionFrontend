@@ -4,6 +4,7 @@ import { DiscussionEmbed } from 'disqus-react';
 import CompanyCard from "@/components/companyCard";
 import useSWR from "swr";
 import {CompanyData} from "@/types";
+import Link from "next/link";
 
 interface Companyinfo {
     resultCnt: number,
@@ -22,7 +23,9 @@ export default function CompanyInfoView() {
 
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
                     {companies?.resultList.map((company, index) => (
-                        <CompanyCard key={index} {...company} />
+                        <Link href={`/company/${company.companyName}`} key={index}>
+                            <CompanyCard key={index} {...company} />
+                        </Link>
                     ))}
                 </div>
 

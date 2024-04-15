@@ -148,7 +148,7 @@ export default function SearchPage({onClose}: SearchPageProps) {
 
 const CompanyCard = ({company}: {company: CompanyData}) => {
     return (
-        <Link href={`/company/${company.id}`}>
+        <Link href={`/company/${company.companyName}`}>
         <div key={company.id} className="flex w-full bg-gray-100 rounded-md">
             <figure className="flex-none w-16 h-16 bg-white m-4 rounded-xl">
                 <Image className="w-12 h-12 m-auto my-2" width={36} height={36} src="/default_company.png" alt="Company" />
