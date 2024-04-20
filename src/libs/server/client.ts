@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-//const API_BASE_URL = 'http://128.199.127.167:9000';
-const API_BASE_URL = 'http://localhost:8080';
+const API_BASE_URL = 'http://128.199.127.167:9000';
+//const API_BASE_URL = 'http://localhost:8080';
 
 const instance = axios.create({
     baseURL: API_BASE_URL,
@@ -77,8 +77,10 @@ export function getCompanyinfoList(companyName: string, location: string = '', i
     return instance.post(`/insight/company/list?${params.toString()}`).then((response) => response.data);
 }
 
-export function getCompanyDataList(companyName: string, location: string = '', industry: string = '', sort: string, size: number, minMemberCount: number) {
-    const params = new URLSearchParams({company: companyName, location: location, industry: industry, sort: sort, size: size.toString(), minMemberCount: minMemberCount.toString(),});
+export function getCompanyDataList(companyName: string, csn: string, zipCode: string, location: string = '', industry: string = '', sort: string, size: number, minMemberCount: number) {
+    const params = new URLSearchParams(
+        {company: companyName, csn: csn, zipCode: zipCode, location: location, industry: industry, sort: sort, size: size.toString(), minMemberCount: minMemberCount.toString(),}
+    );
     return instance.post(`/insight/company/list?${params.toString()}`).then((response) => response.data);
 }
 

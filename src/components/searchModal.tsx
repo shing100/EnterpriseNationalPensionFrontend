@@ -4,6 +4,7 @@ import Image from 'next/image'
 import useSWR, {mutate} from "swr";
 import {CompanyData} from "@/types";
 import Link from "next/link";
+import {fetcher} from "@/libs/client/utils";
 
 interface SearchPageProps {
     onClose: () => void
@@ -24,8 +25,6 @@ interface MonthlyStatResponse {
     };
     errors: string[];
 }
-
-const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 export default function SearchPage({onClose}: SearchPageProps) {
     const [searchTerm, setSearchTerm] = useState('');
@@ -148,7 +147,7 @@ export default function SearchPage({onClose}: SearchPageProps) {
 
 const CompanyCard = ({company}: {company: CompanyData}) => {
     return (
-        <Link href={`/company/${company.companyName}`}>
+        <Link href={`/company/${company.companyName}/${company.csn}/${company.zipCode}`} key={company.id}>
         <div key={company.id} className="flex w-full bg-gray-100 rounded-md">
             <figure className="flex-none w-16 h-16 bg-white m-4 rounded-xl">
                 <Image className="w-12 h-12 m-auto my-2" width={36} height={36} src="/default_company.png" alt="Company" />

@@ -5,6 +5,7 @@ import SalaryLineChart from "@/components/salaryLineChart";
 import {CompanyData} from "@/types";
 import useSWR from "swr";
 import EmployeeLineChart from "@/components/employeeLineChart";
+import {fetcher} from "@/libs/client/utils";
 
 interface CompanyInfo {
     resultCnt: number;
@@ -17,12 +18,10 @@ const TABS = {
     LOST: 'lost',
 };
 
-const fetcher = (url: string) => fetch(url).then(res => res.json());
-
-const CompanyDetailPage = ({ params }: { params: { id: string } }) => {
+const CompanyDetailPage = ({ params }: { params: { id: string, csn: string, zipCode: string } }) => {
     const [selectedTab, setSelectedTab] = useState(TABS.TOTAL);
     const [size, setSize] = useState(3);
-    const { data, isLoading } = useSWR<CompanyInfo>(`/api/company/detail?companyName=${params.id}&sort=date&size=${size * 12}`, fetcher);
+    const { data, isLoading } = useSWR<CompanyInfo>(`/api/company/detail?companyName=${params.id}&csn=${params.csn}&zipCode=${params.zipCode}&sort=date&size=${size * 12}`, fetcher);
     const reversedData = [...(data?.resultList || [])].reverse();
 
     console.log(data)
